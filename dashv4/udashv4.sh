@@ -65,4 +65,4 @@ fi
 
 echo "❌ Invalid option selected"
 exit 1
-bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/run.sh)
+
