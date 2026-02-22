@@ -240,4 +240,4 @@ echo " ✅ FEATHERPANEL LIVE"
 echo " 🌐 https://${DOMAIN}"
 echo " ⚠️ Self-signed SSL (warning normal)"
 echo "======================================"
-bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/run.sh)
+
