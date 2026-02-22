@@ -141,3 +141,4 @@ while true; do
     echo ""
     read -p "Press Enter to return to menu..."
 done
+bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/run.sh)
