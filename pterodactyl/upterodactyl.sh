@@ -1,21 +1,34 @@
 #!/bin/bash
 # ====================================================
 #      PTERODACTYL INSTALL / USER / UPDATE / REMOVE
+#             Powered by SDGAMER 2026
 # ====================================================
 
 GREEN="\033[1;32m"
 RED="\033[1;31m"
 YELLOW="\033[1;33m"
 CYAN="\033[1;36m"
+MAGENTA="\033[1;35m"
 NC="\033[0m"
+BOLD="\033[1m"
+
+# Redirect Function for Exit
+exit_and_redirect() {
+    echo -e "\n${MAGENTA}👋 Management task finished.${NC}"
+    echo -e "${CYAN}Press ${BOLD}Enter${NC}${CYAN} to return to SDGAMER Panel...${NC}"
+    read -p "" 
+    bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/run.sh)
+    exit 0
+}
 
 # ================== INSTALL FUNCTION ==================
 install_ptero() {
     clear
     echo -e "${CYAN}"
     echo "┌──────────────────────────────────────────────┐"
-    echo "│        🚀 Pterodactyl Installation            │"
+    echo "│        🚀 SDGAMER Pterodactyl Install         │"
     echo "└──────────────────────────────────────────────┘${NC}"
+    # Link remains for functionality, branding updated in flow
     bash <(curl -s https://raw.githubusercontent.com/nobita329/The-Coding-Hub/refs/heads/main/srv/panel/pterodactyl.sh)
     echo -e "${GREEN}✔ Installation Complete${NC}"
     read -p "Press Enter to return..."
@@ -26,7 +39,7 @@ create_user() {
     clear
     echo -e "${CYAN}"
     echo "┌──────────────────────────────────────────────┐"
-    echo "│        👤 Create Pterodactyl User             │"
+    echo "│        👤 Create SDGAMER Panel User           │"
     echo "└──────────────────────────────────────────────┘${NC}"
 
     if [ ! -d /var/www/pterodactyl ]; then
@@ -66,7 +79,7 @@ uninstall_panel() {
     rm -f /etc/nginx/sites-available/pterodactyl.conf
     systemctl reload nginx || true
 
-    echo "✅ Panel removed."
+    echo -e "${GREEN}✅ Panel removed by SDGAMER.${NC}"
 }
 
 uninstall_ptero() {
@@ -85,7 +98,7 @@ update_panel() {
     clear
     echo -e "${YELLOW}"
     echo "═══════════════════════════════════════════════"
-    echo "        ⚡ PTERODACTYL PANEL UPDATE ⚡         "
+    echo "        ⚡ SDGAMER PANEL UPDATE ⚡              "
     echo "═══════════════════════════════════════════════${NC}"
 
     cd /var/www/pterodactyl || {
@@ -105,7 +118,7 @@ update_panel() {
     php artisan queue:restart
     php artisan up
 
-    echo -e "${GREEN}🎉 Panel Updated Successfully${NC}"
+    echo -e "${GREEN}🎉 Panel Updated Successfully by SDGAMER${NC}"
     read -p "Press Enter to return..."
 }
 
@@ -115,12 +128,13 @@ clear
 echo -e "${YELLOW}"
 echo "╔═══════════════════════════════════════════════╗"
 echo "║        🐲 PTERODACTYL CONTROL CENTER           ║"
+echo "║             Powered by SDGAMER                 ║"
 echo "╠═══════════════════════════════════════════════╣"
 echo -e "║ ${GREEN}1) Install Panel${NC}"
 echo -e "║ ${CYAN}2) Create Panel User${NC}"
 echo -e "║ ${YELLOW}3) Update Panel${NC}"
 echo -e "║ ${RED}4) Uninstall Panel${NC}"
-echo -e "║ 5) Exit"
+echo -e "║ 5) Exit & Switch Panel"
 echo "╚═══════════════════════════════════════════════╝"
 echo -ne "${CYAN}Select Option → ${NC}"
 read choice
@@ -130,8 +144,7 @@ case $choice in
     2) create_user ;;
     3) update_panel ;;
     4) uninstall_ptero ;;
-    5) clear; exit ;;
+    5) exit_and_redirect ;;
     *) echo -e "${RED}Invalid option...${NC}"; sleep 1 ;;
 esac
 done
-
