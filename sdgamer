@@ -1,1 +1,0 @@
-curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/run.sh -o run.sh && chmod +x run.sh && ./run.sh
