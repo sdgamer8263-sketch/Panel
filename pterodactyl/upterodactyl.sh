@@ -134,4 +134,4 @@ case $choice in
     *) echo -e "${RED}Invalid option...${NC}"; sleep 1 ;;
 esac
 done
-bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/run.sh)
+
