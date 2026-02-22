@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==================================================
-# FEATHER  PANEL AUTO INSTALLER
-# Clean UI • One Page • Production Ready
+# FEATHER PANEL AUTO INSTALLER
+# SDGAMER Edition • Clean UI • Production Ready
 # ==================================================
 
 # ---------------- UI THEME ----------------
@@ -14,11 +14,21 @@ C_PURPLE="\e[1;35m"
 C_CYAN="\e[1;36m"
 C_WHITE="\e[1;37m"
 C_GRAY="\e[1;90m"
+C_MAGENTA="\e[1;35m"
 
 line(){ echo -e "${C_GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_RESET}"; }
 step(){ echo -e "${C_BLUE}➜ $1${C_RESET}"; }
 ok(){ echo -e "${C_GREEN}✔ $1${C_RESET}"; }
 warn(){ echo -e "${C_YELLOW}⚠ $1${C_RESET}"; }
+
+# Redirect Function for Exit
+exit_and_redirect() {
+    echo -e "\n${C_MAGENTA}👋 Installation process finished.${C_RESET}"
+    echo -e "${C_CYAN}Press ${C_WHITE}${C_BOLD}Enter${C_RESET}${C_CYAN} to return to SDGAMER Panel...${C_RESET}"
+    read -p "" 
+    bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/run.sh)
+    exit 0
+}
 
 banner(){
 clear
@@ -36,10 +46,9 @@ cat << "EOF"
        FeatherPanel INSTALLER Mode by - SDGAMER
 EOF
 echo -e "${C_RESET}"
-echo "🧠 OS Detected: $OS ($CODENAME)"
 line
 echo -e "${C_GREEN}⚡ Fast • Stable • Production Ready${C_RESET}"
-echo -e "${C_PURPLE}🧠 The Coding Hub — 2026 Installer${C_RESET}"
+echo -e "${C_PURPLE}🧠 SDGAMER — 2026 Installer${C_RESET}"
 line
 }
 
@@ -49,7 +58,7 @@ read -p "🌐 Enter domain (panel.example.com): " DOMAIN
 
 if [[ -z "$DOMAIN" ]]; then
   echo "❌ Domain required"
-  exit 1
+  exit_and_redirect
 fi
 
 # ==============================
@@ -58,124 +67,98 @@ fi
 . /etc/os-release
 OS=$ID
 CODENAME=$VERSION_CODENAME
-
-echo "🧠 OS Detected: $OS ($CODENAME)"
+step "OS Detected: $OS ($CODENAME)"
 
 # ==============================
 # BASE REPOS
 # ==============================
+step "Updating system and installing dependencies..."
 if [[ "$OS" == "ubuntu" ]]; then
-   # Update the server
   apt update && apt upgrade -y
-  # Add "add-apt-repository" command
-  apt -y install software-properties-common curl apt-transport-https ca-certificates gnupg
-  # Add additional repositories for PHP, Redis, and MariaDB
+  apt -y install software-properties-common curl apt-transport-https ca-certificates gnupg bc
   LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
-  # Update repositories list
   apt update
-  # Add universe repository if you are on Ubuntu 18.04
-  apt-add-repository universe
-  # Install Dependencies
   apt -y install php8.5 php8.5-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip,redis,mongodb,pgsql,pdo-pgsql} mariadb-server nginx tar unzip zip git redis-server make dos2unix || true
 elif [[ "$OS" == "debian" ]]; then
-   # Update the server
   apt update && apt upgrade -y
-  # Install necessary packages
-  apt -y install software-properties-common curl ca-certificates gnupg2 sudo lsb-release make
-  # Add additional repositories for PHP, Redis, and MariaDB
+  apt -y install software-properties-common curl ca-certificates gnupg2 sudo lsb-release make bc
   echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/sury-php.list
-  curl -fsSL https://packages.sury.org/php/ apt.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/sury-keyring.gpg
-  # Update repositories list
+  curl -fsSL https://packages.sury.org/php/apt.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/sury-keyring.gpg
   apt update
-  # Install PHP and required extensions
   apt install -y php8.5 php8.5-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip,redis,mongodb,pgsql,pdo-pgsql}
-  # MariaDB repo setup script
   curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash
-  # Install the rest of dependencies
   apt install -y mariadb-server nginx tar unzip git redis-server zip dos2unix
 else
   echo "❌ Unsupported OS"
-  exit 1
+  exit_and_redirect
 fi
 
 # ==============================
-# COMPOSER
+# COMPOSER & NODE
 # ==============================
-curl -sS https://getcomposer.org/installer \
- | php -- --install-dir=/usr/local/bin --filename=composer
-
-# ==============================
-# NVM + NODE
-# ==============================
+step "Installing Composer and Node.js..."
+curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 apt install -y nodejs npm
 npm install -g n
 n lts
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-nvm --version
 nvm install --lts
 npm install -g pnpm npm-check-updates
-pnpm --version
 
 # ==============================
-# FEATHERPANEL
+# FEATHERPANEL CLONE
 # ==============================
+step "Cloning FeatherPanel..."
 mkdir -p /var/www
 cd /var/www
 git clone https://github.com/mythicalltd/featherpanel.git featherpanel
-chown -R www-data:www-data /var/www/featherpanel/*
 cd /var/www/featherpanel
 
 # ==============================
-# BACKEND
+# BACKEND & FRONTEND BUILD
 # ==============================
+step "Building Application (Backend/Frontend)..."
 COMPOSER_ALLOW_SUPERUSER=1 composer install --working-dir=/var/www/featherpanel/backend
 pnpm install --dir /var/www/featherpanel/frontendv2/
+
 # ==============================
 # DATABASE
 # ==============================
+step "Configuring Database..."
 DB_NAME=featherpanel
 DB_USER=featherpanel
-DB_PASS=1234
+DB_PASS=$(openssl rand -base64 12)
 mariadb -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};"
 mariadb -e "CREATE USER IF NOT EXISTS '${DB_USER}'@'127.0.0.1' IDENTIFIED BY '${DB_PASS}';"
 mariadb -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'127.0.0.1' WITH GRANT OPTION;"
 mariadb -e "FLUSH PRIVILEGES;"
 
 # ==============================
-# CRON
+# CRON & APP SETUP
 # ==============================
+step "Finalizing App Configuration..."
 { crontab -l 2>/dev/null | grep -v featherpanel || true
   echo "* * * * * bash /var/www/featherpanel/backend/storage/cron/runner.bash >/dev/null 2>&1"
   echo "* * * * * php  /var/www/featherpanel/backend/storage/cron/runner.php  >/dev/null 2>&1"
 } | crontab -
-clear
-# ==============================
-# APP SETUP
-# ==============================
+
 php app setup
 php app migrate
-# ==============================
-# FRONTEND
-# ==============================
+
 cd /var/www/featherpanel/frontendv2
 pnpm build
 
 # ==============================
-# SSL (SELF-SIGNED)
+# SSL & NGINX
 # ==============================
+step "Setting up Web Server and SSL..."
 mkdir -p /etc/certs/featherpanel
 cd /etc/certs/featherpanel
-
 openssl req -new -newkey rsa:4096 -days 3650 -nodes -x509 \
--subj "/C=NA/ST=NA/L=NA/O=NA/CN=Generic SSL Certificate" \
+-subj "/C=NA/ST=NA/L=NA/O=SDGAMER/CN=${DOMAIN}" \
 -keyout privkey.pem -out fullchain.pem
-
-# ==============================
-# NGINX CONFIG
-# ==============================
-rm -f /etc/nginx/sites-enabled/default
 
 cat <<EOF > /etc/nginx/sites-available/FeatherPanel.conf
 server {
@@ -183,45 +166,26 @@ server {
     server_name ${DOMAIN};
     return 301 https://\$host\$request_uri;
 }
-
 server {
     listen 443 ssl http2;
     server_name ${DOMAIN};
-
     root /var/www/featherpanel/frontend/dist;
     index index.html;
-
     ssl_certificate /etc/certs/featherpanel/fullchain.pem;
     ssl_certificate_key /etc/certs/featherpanel/privkey.pem;
-
-    client_max_body_size 100m;
-    sendfile off;
-
-    location / {
-        try_files \$uri \$uri/ /index.html;
-    }
-
+    location / { try_files \$uri \$uri/ /index.html; }
     location /api {
         proxy_pass http://localhost:8721;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
     }
-
-    location ^~ /attachments/ { alias /var/www/featherpanel/backend/public/attachments/; }
-    location ^~ /addons/      { alias /var/www/featherpanel/backend/public/addons/; }
-    location ^~ /components/  { alias /var/www/featherpanel/backend/public/components/; }
 }
-
 server {
     listen 8721;
     server_name localhost;
     root /var/www/featherpanel/backend/public;
     index index.php;
-
-    location / {
-        try_files \$uri \$uri/ /index.php?\$query_string;
-    }
-
+    location / { try_files \$uri \$uri/ /index.php?\$query_string; }
     location ~ \\.php\$ {
         fastcgi_pass unix:/run/php/php8.5-fpm.sock;
         include fastcgi_params;
@@ -231,13 +195,17 @@ server {
 EOF
 
 ln -sf /etc/nginx/sites-available/FeatherPanel.conf /etc/nginx/sites-enabled/FeatherPanel.conf
+chown -R www-data:www-data /var/www/featherpanel/*
 nginx -t && systemctl restart nginx
 
-chown -R www-data:www-data /var/www/featherpanel/*
+# ==============================
+# FINISH
+# ==============================
 clear
 echo "======================================"
-echo " ✅ FEATHERPANEL LIVE"
+echo " ✅ FEATHERPANEL LIVE BY SDGAMER"
 echo " 🌐 https://${DOMAIN}"
-echo " ⚠️ Self-signed SSL (warning normal)"
+echo " 🔑 DB Pass: ${DB_PASS}"
 echo "======================================"
 
+exit_and_redirect
