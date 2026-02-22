@@ -1,21 +1,34 @@
 #!/bin/bash
 # ====================================================
-#      PTERODACTYL INSTALL / USER / UPDATE / REMOVE
+#      REVIACTYL INSTALL / USER / UPDATE / REMOVE
+#             Powered by SDGAMER 2026
 # ====================================================
 
 GREEN="\033[1;32m"
 RED="\033[1;31m"
 YELLOW="\033[1;33m"
 CYAN="\033[1;36m"
+MAGENTA="\033[1;35m"
 NC="\033[0m"
+BOLD="\033[1m"
+
+# Redirect Function for Exit
+exit_and_redirect() {
+    echo -e "\n${MAGENTA}👋 Management task finished.${NC}"
+    echo -e "${CYAN}Press ${BOLD}Enter${NC}${CYAN} to return to SDGAMER Panel...${NC}"
+    read -p "" 
+    bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/run.sh)
+    exit 0
+}
 
 # ================== INSTALL FUNCTION ==================
 install_ptero() {
     clear
     echo -e "${CYAN}"
     echo "┌──────────────────────────────────────────────┐"
-    echo "│        🚀 reviactyl Installation            │"
+    echo "│        🚀 SDGAMER reviactyl Install          │"
     echo "└──────────────────────────────────────────────┘${NC}"
+    # Link remains for functionality, branding updated in flow
     bash <(curl -s https://raw.githubusercontent.com/nobita329/The-Coding-Hub/refs/heads/main/srv/panel/tool/reviactyl.sh)
     echo -e "${GREEN}✔ Installation Complete${NC}"
     read -p "Press Enter to return..."
@@ -26,7 +39,7 @@ create_user() {
     clear
     echo -e "${CYAN}"
     echo "┌──────────────────────────────────────────────┐"
-    echo "│        👤 Create reviactyl User             │"
+    echo "│        👤 Create SDGAMER Panel User           │"
     echo "└──────────────────────────────────────────────┘${NC}"
 
     if [ ! -d /var/www/reviactyl ]; then
@@ -66,7 +79,7 @@ uninstall_panel() {
     rm -f /etc/nginx/sites-available/reviactyl.conf
     systemctl reload nginx || true
 
-    echo "✅ Panel removed."
+    echo -e "${GREEN}✅ Panel removed by SDGAMER.${NC}"
 }
 
 uninstall_ptero() {
@@ -80,12 +93,12 @@ uninstall_ptero() {
     read -p "Press Enter to return..."
 }
 
-# ================= UPDATE FUNCTION =================
+# ================= UPDATE FUNCTIONS =================
 reset_panel() {
     clear
     echo -e "${YELLOW}"
     echo "═══════════════════════════════════════════════"
-    echo "        ⚡ reviactyl PANEL UPDATE ⚡         "
+    echo "        ⚡ SDGAMER PANEL RESET ⚡               "
     echo "═══════════════════════════════════════════════${NC}"
 
     cd /var/www/reviactyl || {
@@ -97,7 +110,7 @@ reset_panel() {
     php artisan down
     php artisan p:upgrade
     php artisan up
-    echo -e "${GREEN}🎉 Panel Updated Successfully${NC}"
+    echo -e "${GREEN}🎉 Panel Reset Successfully by SDGAMER${NC}"
     read -p "Press Enter to return..."
 }
 
@@ -105,7 +118,7 @@ Migrating() {
     clear
     echo -e "${YELLOW}"
     echo "═══════════════════════════════════════════════"
-    echo "        ⚡ Update = Reviactyl ⚡         "
+    echo "        ⚡ Migration to Reviactyl ⚡            "
     echo "═══════════════════════════════════════════════${NC}"
 
       cd /var/www/pterodactyl || {
@@ -125,7 +138,7 @@ Migrating() {
     chown -R www-data:www-data /var/www/pterodactyl/*
     sudo systemctl enable --now pteroq.service
     php artisan up
-    echo -e "${GREEN}🎉 Panel Updated Successfully${NC}"
+    echo -e "${GREEN}🎉 Migration completed by SDGAMER${NC}"
     read -p "Press Enter to return..."
 }
 
@@ -133,7 +146,7 @@ update() {
     clear
     echo -e "${YELLOW}"
     echo "═══════════════════════════════════════════════"
-    echo "        ⚡ Update = Reviactyl ⚡         "
+    echo "        ⚡ SDGAMER PANEL UPDATE ⚡              "
     echo "═══════════════════════════════════════════════${NC}"
 
       cd /var/www/reviactyl || {
@@ -152,23 +165,25 @@ update() {
     chown -R www-data:www-data /var/www/reviactyl/*
     sudo systemctl enable --now reviq.service
     php artisan up
-    echo -e "${GREEN}🎉 Panel Updated Successfully${NC}"
+    echo -e "${GREEN}🎉 Panel Updated Successfully by SDGAMER${NC}"
     read -p "Press Enter to return..."
 }
+
 # ===================== MENU =====================
 while true; do
 clear
 echo -e "${YELLOW}"
 echo "╔═══════════════════════════════════════════════╗"
 echo "║        🐲 reviactyl CONTROL CENTER           ║"
+echo "║             Powered by SDGAMER                 ║"
 echo "╠═══════════════════════════════════════════════╣"
 echo -e "║ ${GREEN}1) Install Panel${NC}"
 echo -e "║ ${CYAN}2) Create Panel User${NC}"
 echo -e "║ ${YELLOW}3) Reset Panel${NC}"
-echo -e "║ ${RED}4) uninstall ${NC}"
-echo -e "║ ${GREEN}5) Migrating  Panel${NC}"
+echo -e "║ ${RED}4) Uninstall Panel${NC}"
+echo -e "║ ${GREEN}5) Migrating Panel${NC}"
 echo -e "║ ${GREEN}6) Update Panel${NC}"
-echo -e "║ 7) Exit"
+echo -e "║ 7) Exit & Switch Panel"
 echo "╚═══════════════════════════════════════════════╝"
 echo -ne "${CYAN}Select Option → ${NC}"
 read choice
@@ -180,8 +195,7 @@ case $choice in
     4) uninstall_ptero ;;
     5) Migrating ;;
     6) update ;;
-    7) clear; exit ;;
+    7) exit_and_redirect ;;
     *) echo -e "${RED}Invalid option...${NC}"; sleep 1 ;;
 esac
 done
-
