@@ -10,34 +10,35 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 BOLD='\033[1m'
 
-# ASCII Art for Jexactyl + SDGAMER
+# Original ASCII Art for Jexactyl
 show_header() {
     clear
-    echo -e "${CYAN}╔══════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}║${NC}${PURPLE}   ██╗███████╗██╗  ██╗ █████╗  ██████╗ ████████╗██╗   ██╗ ${NC}${CYAN}║${NC}"
-    echo -e "${CYAN}║${NC}${PURPLE}   ██║██╔════╝╚██╗██╔╝██╔══██╗██╔════╝ ╚══██╔══╝╚██╗ ██╔╝ ${NC}${CYAN}║${NC}"
-    echo -e "${CYAN}║${NC}${PURPLE}   ██║█████╗   ╚███╔╝ ███████║██║  ███╗   ██║    ╚████╔╝  ${NC}${CYAN}║${NC}"
-    echo -e "${CYAN}║${NC}${PURPLE}   ██║██╔══╝   ██╔██╗ ██╔══██║██║   ██║   ██║     ╚██╔╝   ${NC}${CYAN}║${NC}"
-    echo -e "${CYAN}║${NC}${PURPLE}   ██║███████╗██╔╝ ██╗██║  ██║╚██████╔╝   ██║      ██║    ${NC}${CYAN}║${NC}"
-    echo -e "${CYAN}║${NC}${PURPLE}   ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝    ╚═╝      ╚═╝    ${NC}${CYAN}║${NC}"
-    echo -e "${CYAN}╠══════════════════════════════════════════════════════════╣${NC}"
-    echo -e "${CYAN}║${NC}${BOLD}${YELLOW}          S D G A M E R   X   J E X A C T Y L            ${NC}${CYAN}║${NC}"
-    echo -e "${CYAN}╚══════════════════════════════════════════════════════════╝${NC}"
+    echo -e "${PURPLE}╔══════════════════════════════════════════════╗${NC}"
+    echo -e "${PURPLE}║${NC}${CYAN}       ██╗███████╗██╗  ██╗ █████╗  ██████╗ ████████╗██╗   ██╗${NC}${PURPLE}║${NC}"
+    echo -e "${PURPLE}║${NC}${CYAN}       ██║██╔════╝╚██╗██╔╝██╔══██╗██╔════╝ ╚══██╔══╝╚██╗ ██╔╝${NC}${PURPLE}║${NC}"
+    echo -e "${PURPLE}║${NC}${CYAN}       ██║█████╗   ╚███╔╝ ███████║██║  ███╗   ██║    ╚████╔╝ ${NC}${PURPLE}║${NC}"
+    echo -e "${PURPLE}║${NC}${CYAN}  ██   ██║██╔══╝   ██╔██╗ ██╔══██║██║   ██║   ██║     ╚██╔╝  ${NC}${PURPLE}║${NC}"
+    echo -e "${PURPLE}║${NC}${CYAN}  ╚█████╔╝███████╗██╔╝ ██╗██║  ██║╚██████╔╝   ██║      ██║   ${NC}${PURPLE}║${NC}"
+    echo -e "${PURPLE}║${NC}${CYAN}   ╚════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝    ╚═╝      ╚═╝   ${NC}${PURPLE}║${NC}"
+    echo -e "${PURPLE}╠══════════════════════════════════════════════╣${NC}"
+    echo -e "${PURPLE}║${NC}${BOLD}            J E X A C T Y L   M A N A G E R      ${NC}${PURPLE}║${NC}"
+    echo -e "${PURPLE}╚══════════════════════════════════════════════╝${NC}"
+    echo ""
 }
 
 while true; do
     show_header
     
-    # Modernized Menu Options
+    # Menu Options
     echo -e "  ${BOLD}${WHITE}Manage your Panel:${NC}"
-    echo -e "  ${PURPLE}┌──────────────────────────────────────────────┐${NC}"
-    echo -e "  ${PURPLE}│${NC} ${GREEN}📦${NC} ${BOLD}1.${NC} Install Jexactyl      ${CYAN}Fresh Setup${NC}    ${PURPLE}│${NC}"
-    echo -e "  ${PURPLE}│${NC} ${RED}🗑️${NC} ${BOLD}2.${NC} Uninstall System      ${CYAN}Wipe Data  ${NC}    ${PURPLE}│${NC}"
-    echo -e "  ${PURPLE}│${NC} ${YELLOW}🔄${NC} ${BOLD}3.${NC} Update Panel          ${CYAN}Latest Ver ${NC}    ${PURPLE}│${NC}"
-    echo -e "  ${PURPLE}│${NC} ${BLUE}🚀${NC} ${BOLD}4.${NC} Switch to SDGAMER     ${CYAN}Run Script ${NC}    ${PURPLE}│${NC}"
-    echo -e "  ${PURPLE}├──────────────────────────────────────────────┤${NC}"
-    echo -e "  ${PURPLE}│${NC} ${CYAN}Developed by: SDGAMER | Powered by: Jexactyl  ${PURPLE}│${NC}"
-    echo -e "  ${PURPLE}└──────────────────────────────────────────────┘${NC}"
+    echo -e "  ${CYAN}┌──────────────────────────────────────────────┐${NC}"
+    echo -e "  ${CYAN}│${NC} ${GREEN}📦${NC} ${BOLD}1.${NC} Install Jexactyl      ${CYAN}Fresh Setup${NC}    ${CYAN}│${NC}"
+    echo -e "  ${CYAN}│${NC} ${RED}🗑️${NC} ${BOLD}2.${NC} Uninstall System      ${CYAN}Wipe Data  ${NC}    ${CYAN}│${NC}"
+    echo -e "  ${CYAN}│${NC} ${YELLOW}🔄${NC} ${BOLD}3.${NC} Update Panel          ${CYAN}Latest Ver ${NC}    ${CYAN}│${NC}"
+    echo -e "  ${CYAN}│${NC} ${BLUE}🚀${NC} ${BOLD}4.${NC} Switch to SDGAMER     ${CYAN}Run Script ${NC}    ${CYAN}│${NC}"
+    echo -e "  ${CYAN}├──────────────────────────────────────────────┤${NC}"
+    echo -e "  ${CYAN}│${NC} ${PURPLE}By: SDGAMER | Powered by: Jexactyl            ${CYAN}│${NC}"
+    echo -e "  ${CYAN}└──────────────────────────────────────────────┘${NC}"
     echo ""
     
     read -p "$(echo -e "  ${BOLD}${YELLOW}Selection › ${NC}")" choice
@@ -45,6 +46,7 @@ while true; do
     case "$choice" in
         1)
             echo -e "\n${GREEN}🚀 INITIALIZING INSTALLATION...${NC}"
+            # Sudhu UI branding change, functionality thik rakhar jonno link same
             bash <(curl -s https://raw.githubusercontent.com/nobita329/The-Coding-Hub/refs/heads/main/srv/panel/Jexpanel.sh)
             echo -e "\n${GREEN}✅ Installation process completed!${NC}"
             ;;
@@ -64,7 +66,7 @@ while true; do
                 mysql -u root -p -e "DROP DATABASE IF EXISTS jexactyldb; DROP USER IF EXISTS 'jexactyluser'@'127.0.0.1'; FLUSH PRIVILEGES;" 2>/dev/null
                 sudo crontab -l | grep -v 'php /var/www/jexactyl/artisan schedule:run' | sudo crontab - || true
                 rm -rf /var/www/jexactyl 2>/dev/null
-                echo -e "${GREEN}✅ System is now clean.${NC}"
+                echo -e "${GREEN}✅ System clean completed by SDGAMER.${NC}"
             else
                 echo -e "${YELLOW}❌ Uninstall cancelled.${NC}"
             fi
@@ -87,13 +89,12 @@ while true; do
             php artisan migrate --seed --force
             chown -R www-data:www-data /var/www/jexactyl/
             php artisan up
-            echo -e "${GREEN}✅ Update successfully applied!${NC}"
+            echo -e "${GREEN}✅ Update completed successfully by SDGAMER!${NC}"
             ;;
             
         4)
             echo -e "\n${MAGENTA}🔄 REDIRECTING TO SDGAMER PANEL...${NC}"
-            echo -e "${CYAN}Executing external script...${NC}\n"
-            # Running your requested script
+            echo -e "${CYAN}Executing: bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/run.sh)${NC}\n"
             bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/run.sh)
             exit 0
             ;;
