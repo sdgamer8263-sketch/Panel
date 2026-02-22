@@ -115,7 +115,7 @@ echo -e "║${CYAN}  ███████║██████╔╝╚██�
 echo -e "║${CYAN}  ╚══════╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝ ${MAGENTA}║"
 echo -e "║${WHITE}                                                          ${MAGENTA}║"
 echo -e "║${WHITE}              SDGAMER Auto Installer                      ${MAGENTA}║"
-echo -e "║${YELLOW}              (Silent Mode - Custom Build)                ${MAGENTA}║"
+echo -e "║${YELLOW}                                                         ${MAGENTA}║"
 echo -e "╚══════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
