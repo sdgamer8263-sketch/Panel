@@ -83,7 +83,7 @@ while true; do
         9) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/fea/fea.sh) ;;
         0)
             echo -e "${YELLOW}Redirecting... Goodbye!${NC}"
-            bash <(curl -s https://vps1.jishnu.fun)
+            
             exit 0
             ;;
         *)
