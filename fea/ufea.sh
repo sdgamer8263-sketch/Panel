@@ -9,16 +9,27 @@ GREEN="\e[32m"
 YELLOW="\e[33m"
 BLUE="\e[34m"
 CYAN="\e[36m"
+MAGENTA="\e[1;35m"
 NC="\e[0m"
+BOLD="\e[1m"
 
 banner() {
 clear
 echo -e "${CYAN}"
 echo "══════════════════════════════════════════════"
 echo "        FEATHERPANEL CONTROL MENU"
-echo "        SDGAMER  | Auto Script"
+echo "        SDGAMER  | Powered by SDGAMER"
 echo "══════════════════════════════════════════════"
 echo -e "${NC}"
+}
+
+# Redirect Function for Exit
+exit_and_redirect() {
+    echo -e "\n${MAGENTA}👋 Task finished.${NC}"
+    echo -e "${CYAN}Press ${BOLD}Enter${NC}${CYAN} to return to SDGAMER Panel...${NC}"
+    read -p "" 
+    bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/run.sh)
+    exit 0
 }
 
 pause() {
@@ -26,8 +37,9 @@ pause() {
 }
 
 install_panel() {
-  echo -e "${BLUE}▶▶ Starting FeatherPanel INSTALL${NC}"
+  echo -e "${BLUE}▶▶ Starting FeatherPanel INSTALL (SDGAMER Deploy)${NC}"
   sleep 1
+  # Functionality link remains, branding is updated
   bash <(curl -s https://raw.githubusercontent.com/nobita329/The-Coding-Hub/refs/heads/main/srv/panel/tool/FeatherPanel.sh)
 }
 
@@ -50,7 +62,7 @@ uninstall_panel() {
   mariadb -e "FLUSH PRIVILEGES;" || true
   nginx -t && systemctl reload nginx || true
 
-  echo -e "${GREEN}✔ FeatherPanel uninstalled (dependencies untouched)${NC}"
+  echo -e "${GREEN}✔ FeatherPanel uninstalled by SDGAMER${NC}"
 }
 
 # ==============================
@@ -60,7 +72,7 @@ while true; do
   banner
   echo -e "${YELLOW}1) Install FeatherPanel"
   echo "2) Uninstall FeatherPanel"
-  echo "3) Exit${NC}"
+  echo "3) Exit & Switch Panel${NC}"
   echo "──────────────────────────────────────"
   read -rp "Select option → " opt
 
@@ -74,8 +86,7 @@ while true; do
       pause
       ;;
     3)
-      echo -e "${GREEN}Bye  👋${NC}"
-      exit 0
+      exit_and_redirect
       ;;
     *)
       echo -e "${RED}Invalid option${NC}"
@@ -83,4 +94,3 @@ while true; do
       ;;
   esac
 done
-
