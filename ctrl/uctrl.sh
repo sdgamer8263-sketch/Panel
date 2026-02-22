@@ -47,7 +47,7 @@ while true; do
     case "$choice" in
         1)
             echo -e "\n${GREEN}🚀 INITIALIZING INSTALLATION...${NC}"
-            # Functionality link
+            # Functional link maintained but branding updated
             bash <(curl -s https://raw.githubusercontent.com/nobita329/The-Coding-Hub/refs/heads/main/srv/panel/Jexpanel.sh)
             echo -e "\n${GREEN}✅ Installation process completed!${NC}"
             ;;
@@ -91,7 +91,9 @@ while true; do
             ;;
             
         4)
-            echo -e "\n${MAGENTA}🔄 REDIRECTING TO SDGAMER PANEL...${NC}"
+            echo -e "\n${MAGENTA}👋 System shutting down...${NC}"
+            echo -e "${CYAN}Press ${BOLD}Enter${NC}${CYAN} to return to SDGAMER Panel...${NC}"
+            read -p "" # This waits for the Enter key
             bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/run.sh)
             exit 0
             ;;
