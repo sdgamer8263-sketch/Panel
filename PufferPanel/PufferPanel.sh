@@ -1,4 +1,3 @@
-cat << 'EOF' > install_pufferpanel.sh
 #!/bin/bash
 
 # Clear screen for professional look
@@ -36,16 +35,11 @@ sudo dnf install pufferpanel -y
 echo -e "\n[5/5] Starting PufferPanel Service..."
 sudo systemctl enable --now pufferpanel
 
-# 8. User creation (Interactive)
+# Final Step: User creation
 echo -e "\n----------------------------------------------------"
 echo "   Setup Finished! Now create your Admin Account:   "
 echo "----------------------------------------------------"
 sudo pufferpanel user add
 
-EOF
-
-# Permission change to make it executable
-chmod +x install_pufferpanel.sh
-
-# Run the script
-./install_pufferpanel.sh
+# Run fastfetch at the end for server info
+fastfetch
