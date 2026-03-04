@@ -1,57 +1,137 @@
 #!/bin/bash
 
-# --- SDGAMER PufferPanel Auto-Installer ---
+# =========================================================
+#                 SDGAMER CONFIGURATION
+# =========================================================
 
-# 0. Get Root Access
-if [ "$EUID" -ne 0 ]; then 
-  echo "Please run as root or use: sudo bash install.sh"
-  exit
-fi
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+YELLOW='\033[1;33m'
+RESET='\033[0m'
 
-# 1 & 2. System Update & Upgrade
-echo "Starting System Update..."
-dnf update -y && dnf upgrade -y
+# Function: Professional SDGAMER Banner
+function show_banner() {
+    clear
+    echo -e "${CYAN}"
+    cat << "EOF"
+   _____ ____  _____          __  __ ______ _____  
+  / ____|  _ \|  __ \   /\   |  \/  |  ____|  __ \ 
+ | (___ | | | | |  \/  /  \  | \  / | |__  | |__) |
+  \___ \| | | | | __  / /\ \ | |\/| |  __| |  _  / 
+  ____) | |_| | |_\ \/ ____ \| |  | | |____| | \ \ 
+ |_____/|____/ \____/_/    \_\_|  |_|______|_|  \_\
+                                                       
+EOF
+    echo -e "${BLUE}    >>> POWERED BY SDGAMER HOSTING SOLUTIONS <<<    ${RESET}"
+    echo -e "${YELLOW} ================================================== ${RESET}"
+    echo ""
+}
 
-# 3, 4, & 5. Install Dependencies
-echo "Installing Utilities (wget, git, fastfetch)..."
-dnf install wget fastfetch git -y
+# Function: Pause/Wait for Enter
+function wait_for_enter() {
+    echo ""
+    echo -e "${BLUE}--------------------------------------------------${RESET}"
+    read -p " Press ENTER to return to Main Menu..."
+}
 
-# 6. Add PufferPanel Repository
-echo "Adding PufferPanel Repository..."
-curl -s https://packagecloud.io/install/repositories/pufferpanel/pufferpanel/script.rpm.sh | bash
+# =========================================================
+#                       MAIN MENU
+# =========================================================
 
-# 7. Install PufferPanel
-echo "Installing PufferPanel..."
-dnf install pufferpanel -y
+while true; do
+    show_banner
+    echo -e " ${GREEN}[1]${RESET} Install PufferPanel (Auto-Detect OS)"
+    echo -e " ${RED}[2]${RESET} Exit"
+    echo ""
+    echo -n " Select an Option: "
+    read option
 
-# 9 & 10. Enable and Start Service
-echo "Starting PufferPanel Service..."
-systemctl enable --now pufferpanel
+    case $option in
+        1)
+            # START INSTALLATION
+            show_banner
+            echo -e "${YELLOW}[*] Checking System OS...${RESET}"
+            sleep 1
 
-# 8. Add User (Interactive Section)
-# Note: If user gives bhul input, it will show "Invalid option" and stay here.
-echo "--------------------------------------------------------"
-echo "SETTING UP ADMIN USER (Follow prompts carefully)"
-echo "--------------------------------------------------------"
-pufferpanel user add
+            if [ -f /etc/os-release ]; then
+                . /etc/os-release
+                OS=$ID
+            else
+                echo -e "${RED}[!] Error: Cannot detect OS.${RESET}"
+                wait_for_enter
+                continue
+            fi
 
-# --- Final Banner & System Info ---
-clear
-echo "========================================================"
-echo "                INSTALLATION COMPLETE                   "
-echo "========================================================"
-echo "  ____  ____   ____    _    __  __ _____ ____  "
-echo " / ___||  _ \ / ___|  / \  |  \/  | ____|  _ \ "
-echo " \___ \| | | | |  _  / _ \ | |\/| |  _| | |_) |"
-echo "  ___) | |_| | |_| |/ ___ \| |  | | |___|  _ < "
-echo " |____/|____/ \____/_/   \_\_|  |_|_____|_| \_\\"
-echo "                                                "
-echo "                CREATED BY SDGAMER              "
-echo "========================================================"
-echo ""
+            echo -e "Detected OS: ${GREEN}${OS^^}${RESET}"
+            echo ""
+            sleep 1
 
-# Show System Specs
-fastfetch
+            # --- FEDORA / RHEL / CENTOS LOGIC ---
+            if [[ "$OS" == "fedora" || "$OS" == "rhel" || "$OS" == "centos" || "$OS" == "almalinux" ]]; then
+                echo -e "${CYAN}>> Running DNF Update & Install...${RESET}"
+                
+                dnf update -y
+                dnf upgrade -y
+                dnf install wget fastfetch git -y
+                
+                echo -e "${CYAN}>> Adding PufferPanel Repo...${RESET}"
+                curl -s https://packagecloud.io/install/repositories/pufferpanel/pufferpanel/script.rpm.sh?any=true | bash
+                
+                echo -e "${CYAN}>> Installing Panel...${RESET}"
+                dnf install pufferpanel -y
 
-echo ""
-echo "Access your panel at: http://YOUR_IP:8080"
+            # --- UBUNTU / DEBIAN LOGIC ---
+            elif [[ "$OS" == "ubuntu" || "$OS" == "debian" ]]; then
+                echo -e "${CYAN}>> Running APT Update & Install...${RESET}"
+                
+                apt update && apt upgrade -y
+                apt install wget git -y
+                # Fastfetch optional check
+                apt install fastfetch -y 2>/dev/null || echo "Fastfetch skipped"
+
+                echo -e "${CYAN}>> Adding PufferPanel Repo...${RESET}"
+                curl -s https://packagecloud.io/install/repositories/pufferpanel/pufferpanel/script.deb.sh | bash
+                
+                echo -e "${CYAN}>> Installing Panel...${RESET}"
+                apt install pufferpanel -y
+            
+            else
+                echo -e "${RED}[!] Unsupported OS: $OS${RESET}"
+                wait_for_enter
+                continue
+            fi
+
+            # --- COMMON FINAL STEPS ---
+            echo ""
+            echo -e "${YELLOW}>> Create Admin User:${RESET}"
+            pufferpanel user add
+
+            echo -e "${YELLOW}>> Enabling Service:${RESET}"
+            systemctl enable --now pufferpanel
+            systemctl start pufferpanel
+
+            echo ""
+            echo -e "${GREEN}==================================================${RESET}"
+            echo -e "${GREEN}         INSTALLATION COMPLETE - SDGAMER          ${RESET}"
+            echo -e "${GREEN}==================================================${RESET}"
+            
+            # Installation shesh hole Enter chapte bolbe
+            wait_for_enter
+            ;;
+
+        2)
+            echo "Exiting..."
+            exit 0
+            ;;
+
+        *)
+            # Invalid Input Handling
+            echo ""
+            echo -e "${RED}[!] Invalid Option! Please try again.${RESET}"
+            sleep 1.5
+            ;;
+    esac
+done
