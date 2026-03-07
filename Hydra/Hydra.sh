@@ -47,7 +47,7 @@ install_dependencies() {
         # --- UBUNTU / DEBIAN LOGIC (APT) ---
         echo -e "${CYAN}* Using APT package manager...${NC}"
         sudo apt update
-        sudo apt install -y curl software-properties-common git
+        sudo apt install -y curl software-properties-common 
         
         # Install Node.js 20
         curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
