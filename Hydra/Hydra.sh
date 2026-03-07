@@ -28,7 +28,7 @@ if [ "$EUID" -ne 0 ]; then
   echo -e "${RED}Please run this script as root.${NC}"
   exit 1
 fi
-sudo su
+
 # Function to Detect OS and Install Dependencies
 install_dependencies() {
     # Load OS information
