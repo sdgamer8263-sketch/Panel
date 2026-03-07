@@ -114,7 +114,7 @@ while true; do
             systemctl enable --now pufferpanel
             systemctl start pufferpanel
 
-            echo ""
+            echo "Localhost:8080 (http)"
             echo -e "${GREEN}==================================================${RESET}"
             echo -e "${GREEN}         INSTALLATION COMPLETE - SDGAMER          ${RESET}"
             echo -e "${GREEN}==================================================${RESET}"
