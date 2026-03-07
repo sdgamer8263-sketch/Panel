@@ -90,7 +90,8 @@ while true; do
                 apt update && apt upgrade -y
                 apt install wget git -y
                 # Fastfetch optional check
-                apt install fastfetch -y 2>/dev/null || echo "Fastfetch skipped"
+                apt install screenfetch -y
+                apt install neofetch -y 2>/dev/null || echo "Fastfetch skipped"
 
                 echo -e "${CYAN}>> Adding PufferPanel Repo...${RESET}"
                 curl -s https://packagecloud.io/install/repositories/pufferpanel/pufferpanel/script.deb.sh | bash
