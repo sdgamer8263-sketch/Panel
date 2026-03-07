@@ -67,6 +67,7 @@ while true; do
     echo -e "${GREEN}8)${NC} Feather Panel"
     echo -e "${GREEN}9)${NC} Feather Panel (Auto Install)"
     echo -e "${GREEN}10)${NC}Puffer Panel"
+    echo -e "${GREEN}11)${NC}Hydra Panel"
     echo -e "${RED}0) Exit${NC}"
     echo -e "${CYAN}-------------------------------------------------------${NC}"
 
@@ -83,6 +84,7 @@ while true; do
         8) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/fea/ufea.sh) ;;
         9) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/fea/fea.sh) ;;
         10) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/PufferPanel/PufferPanel.sh) ;;
+        11) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Hydra/Hydra.sh) ;;
         0)
             echo -e "${YELLOW}Redirecting... Goodbye!${NC}"
             
