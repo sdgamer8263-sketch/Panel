@@ -81,7 +81,7 @@ install_panel() {
     fi
 
     # Clone and Setup
-    git clone https://github.com/HydraLabs-beta/panel.git
+    https://github.com/HydraLabs-beta/panel.git
     
     if [ -d "panel" ]; then
         cd panel
