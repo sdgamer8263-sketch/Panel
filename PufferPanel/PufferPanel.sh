@@ -94,10 +94,10 @@ while true; do
                 apt install neofetch -y 2>/dev/null || echo "Fastfetch skipped"
 
                 echo -e "${CYAN}>> Adding PufferPanel Repo...${RESET}"
-                curl -s https://packagecloud.io/install/repositories/pufferpanel/pufferpanel/script.deb.sh | bash
+                curl -s https://packagecloud.io/install/repositories/pufferpanel/pufferpanel/script.deb.sh\?any\=true | sudo bash
                 
                 echo -e "${CYAN}>> Installing Panel...${RESET}"
-                apt install pufferpanel -y
+                sudo apt-get install -y pufferpanel
             
             else
                 echo -e "${RED}[!] Unsupported OS: $OS${RESET}"
