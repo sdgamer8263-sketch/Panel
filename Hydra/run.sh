@@ -1,116 +1,127 @@
 #!/bin/bash
 
-# Function to display the banner
+# --- Colors for formatting ---
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# --- Function: SDGAMER Banner ---
 show_banner() {
     clear
-    echo -e "\033[1;36m"
-    echo "  ____  ____   ____    _    __  __  ____ ____  "
-    echo " / ___||  _ \ / ___|  / \  |  \/  || ____|  _ \ "
-    echo " \___ \| | | | |  _  / _ \ | |\/| ||  _| | |_) |"
-    echo "  ___) | |_| | |_| |/ ___ \| |  | || |___|  _ < "
-    echo " |____/|____/ \____/_/   \_\_|  |_||_____|_| \_\\"
-    echo -e "\033[0m"
-    echo -e "\033[1;32m      Hydra Management Script \033[0m"
-    echo "==================================================="
+    echo -e "${CYAN}"
+    echo "  ____  _____   ____    _    __  __ _____ ____  "
+    echo " / ___||  _  \ / ___|  / \  |  \/  | ____|  _ \ "
+    echo " \___ \| | | || |  _  / _ \ | |\/| |  _| | |_) |"
+    echo "  ___) | |_| || |_| |/ ___ \| |  | | |___|  _ < "
+    echo " |____/|_____/ \____/_/   \_\_|  |_|_____|_| \_\\"
+    echo -e "${NC}"
+    echo -e "${YELLOW}       Welcome to SDGAMER Panel Manager${NC}"
+    echo "=================================================="
 }
 
-# Main Logic
+# --- Function: Option 1 (Install with OS Detection) ---
+install_panel() {
+    echo -e "${YELLOW}Checking System OS...${NC}"
+    
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        OS=$ID
+    else
+        echo -e "${RED}Cannot detect OS. /etc/os-release missing.${NC}"
+        return
+    fi
+
+    if [[ "$OS" == "ubuntu" || "$OS" == "debian" ]]; then
+        echo -e "${GREEN}Detected Ubuntu/Debian.${NC} Running Hydra1..."
+        bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Hydra/Hydra1.sh)
+    
+    elif [[ "$OS" == "fedora" ]]; then
+        echo -e "${GREEN}Detected Fedora.${NC} Running Hydra2..."
+        bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Hydra/Hydra2.sh)
+    
+    else
+        echo -e "${RED}Unsupported OS Detected: $OS${NC}"
+        echo "Please use Ubuntu, Debian, or Fedora."
+    fi
+    
+    read -p "Press Enter to return to menu..."
+}
+
+# --- Function: Option 2 (Add Node) ---
+add_node() {
+    echo -e "${GREEN}Cloning HydraDAEMON...${NC}"
+    git clone https://github.com/hydren-dev/HydraDAEMON
+    
+    if [ -d "HydraDAEMON" ]; then
+        cd HydraDAEMON
+        
+        echo -e "${GREEN}Installing dependencies (npm install)...${NC}"
+        npm install
+        
+        echo ""
+        echo -e "${YELLOW}--------------------------------------------------${NC}"
+        echo -e "${YELLOW}ACTION REQUIRED: Configure Node${NC}"
+        echo -e "Please paste your configuration now (or edit the config file)."
+        echo -e "Once you have finished configuring, press Enter to start the node."
+        echo -e "${YELLOW}--------------------------------------------------${NC}"
+        read -p "Press Enter AFTER you have pasted/saved your configuration..." key
+
+        echo -e "${GREEN}Starting Node...${NC}"
+        node .
+    else
+        echo -e "${RED}Error: Failed to download HydraDAEMON.${NC}"
+    fi
+    
+    # Return to previous directory
+    cd ..
+    read -p "Press Enter to return to menu..."
+}
+
+# --- Function: Option 3 (Start Panel) ---
+start_panel() {
+    if [ -d "oversee-fixed" ]; then
+        echo -e "${GREEN}Starting Panel (oversee-fixed)...${NC}"
+        cd oversee-fixed
+        node .
+        cd .. # Go back after it stops
+    else
+        echo -e "${RED}Error: Directory 'oversee-fixed' not found.${NC}"
+    fi
+    read -p "Press Enter to return to menu..."
+}
+
+# --- Function: Option 4 (Start Node) ---
+start_node() {
+    if [ -d "HydraDAEMON" ]; then
+        echo -e "${GREEN}Starting Node (HydraDAEMON)...${NC}"
+        cd HydraDAEMON
+        node .
+        cd .. # Go back after it stops
+    else
+        echo -e "${RED}Error: Directory 'HydraDAEMON' not found.${NC}"
+    fi
+    read -p "Press Enter to return to menu..."
+}
+
+# --- Main Logic Loop ---
 while true; do
     show_banner
-    echo "1. Install Hydra (Auto-detect OS)"
-    echo "2. Add Node & Configure"
-    echo "3. Start Again (Oversee & HydraDAEMON)"
-    echo "4. Exit"
-    echo "==================================================="
-    read -p "Select an option [1-4]: " choice
+    echo "1. Install Panel (Auto OS Detect)"
+    echo "2. Add Node (Install & Config)"
+    echo "3. Start Panel"
+    echo "4. Start Node"
+    echo "0. Exit"
+    echo ""
+    read -p "Select an option [0-4]: " choice
 
     case $choice in
-        1)
-            echo "Checking Operating System..."
-            # Check for OS release file
-            if [ -f /etc/os-release ]; then
-                . /etc/os-release
-                OS_NAME=$ID
-                LIKE_OS=$ID_LIKE
-                
-                # Logic for Ubuntu/Debian
-                if [[ "$OS_NAME" == "ubuntu" || "$OS_NAME" == "debian" || "$LIKE_OS" == *"debian"* ]]; then
-                    echo "Debian/Ubuntu detected. Running Hydra1..."
-                    bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Hydra/Hydra1.sh)
-                
-                # Logic for Fedora
-                elif [[ "$OS_NAME" == "fedora" || "$LIKE_OS" == *"fedora"* ]]; then
-                    echo "Fedora detected. Running Hydra2..."
-                    bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Hydra/Hydra2.sh)
-                
-                else
-                    echo -e "\033[1;31mUnsupported OS detected: $OS_NAME\033[0m"
-                fi
-            else
-                echo "Cannot detect OS information."
-            fi
-            read -p "Press Enter to return to menu..."
-            ;;
-        
-        2)
-            echo "Cloning HydraDAEMON..."
-            git clone https://github.com/hydren-dev/HydraDAEMON
-            
-            if [ -d "HydraDAEMON" ]; then
-                cd HydraDAEMON
-                echo "Installing dependencies..."
-                npm install
-                
-                echo "---------------------------------------------------"
-                echo -e "\033[1;33mACTION REQUIRED:\033[0m"
-                echo "Please paste/setup your configuration files now."
-                echo "Once you have finished configuring, press Enter to start the node."
-                echo "---------------------------------------------------"
-                read -p ""
-                
-                echo "Starting Node..."
-                node .
-            else
-                echo "Error: Directory HydraDAEMON not found."
-            fi
-            read -p "Press Enter to return to menu..."
-            ;;
-            
-        3)
-            echo "Starting Oversee and HydraDAEMON..."
-            
-            # Note: node . is usually a blocking command. 
-            # If the first one runs effectively, the second might not start until the first stops.
-            # Running exactly as requested:
-            
-            if [ -d "oversee-fixed" ]; then
-                cd oversee-fixed
-                node .
-            else
-                echo "Warning: oversee-fixed directory not found."
-            fi
-
-            if [ -d "../HydraDAEMON" ]; then
-                cd ../HydraDAEMON
-                node .
-            elif [ -d "HydraDAEMON" ]; then
-                cd HydraDAEMON
-                node .
-            else 
-                echo "Warning: HydraDAEMON directory not found."
-            fi
-            
-            read -p "Press Enter to return to menu..."
-            ;;
-            
-        4)
-            echo "Exiting..."
-            exit 0
-            ;;
-            
-        *)
-            echo "Invalid option."
-            read -p "Press Enter to continue..."
-            ;;
+        1) install_panel ;;
+        2) add_node ;;
+        3) start_panel ;;
+        4) start_node ;;
+        0) echo "Exiting..."; exit 0 ;;
+        *) echo -e "${RED}Invalid option.${NC}" ; sleep 1 ;;
     esac
 done
