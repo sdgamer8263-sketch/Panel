@@ -85,7 +85,7 @@ start_panel() {
         echo -e "${GREEN}Starting Panel (oversee-fixed)...${NC}"
         cd oversee-fixed
         node .
-        cd .. # Go back after it stops
+        
     else
         echo -e "${RED}Error: Directory 'oversee-fixed' not found.${NC}"
     fi
@@ -98,7 +98,7 @@ start_node() {
         echo -e "${GREEN}Starting Node (HydraDAEMON)...${NC}"
         cd HydraDAEMON
         node .
-        cd .. # Go back after it stops
+        
     else
         echo -e "${RED}Error: Directory 'HydraDAEMON' not found.${NC}"
     fi
