@@ -50,8 +50,8 @@ git clone https://github.com/draco-labes/oversee-fixed.git && cd oversee-fixed &
 
 echo_message "* Installed Files"
 
-echo_message "* Starting Skyport"
+echo_message "* Starting Hydra"
 
 
 
-echo "* Skyport Installed and Started on Port 3001"
+echo "* Hydra Installed and Started on Port 3001"
