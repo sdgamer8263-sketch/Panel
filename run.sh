@@ -68,6 +68,9 @@ while true; do
     echo -e "${GREEN}9)${NC} Feather Panel (Auto Install)"
     echo -e "${GREEN}10)${NC}Puffer Panel"
     echo -e "${GREEN}11)${NC}Hydra Panel"
+    echo -e "${GREEN}11)${NC} Skyport Panel"
+    echo -e "${GREEN}11)${NC}Darco Panel"
+    echo -e "${GREEN}11)${NC}Airlink Panel ("
     echo -e "${RED}0) Exit${NC}"
     echo -e "${CYAN}-------------------------------------------------------${NC}"
 
@@ -86,6 +89,7 @@ while true; do
         10) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/PufferPanel/PufferPanel.sh) ;;
         11)  bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Hydra/run.sh) ;;
         12)bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Skyport/run.sh) ;;
+        13)bash <(curl -s https://airlink.jishnu.fun)
         0)
             echo -e "${YELLOW}Redirecting... Goodbye!${NC}"
             
