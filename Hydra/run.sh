@@ -84,14 +84,14 @@ start_services() {
     echo -e "${YELLOW}[*] Instructions to Restart Dashboard & Daemon${NC}"
     echo "================================================="
     
-    echo -e "${CYAN}Terminal 1 (Dashboard):${NC}"
-    echo "  1) cd oversee-fixed"
-    echo "  2) node ."
-    echo ""
-    echo -e "${CYAN}Terminal 2 (Daemon/Node):${NC}"
-    echo "  3) Create a new terminal session (+)"
-    echo "  4) cd HydraDAEMON"
-    echo "  5) node ."
+    echo -e "${CYAN}Dashboard Starting:${NC}"
+     cd oversee-fixed
+     node .
+    echo "Node Starting"
+      Create a new terminal session (+)
+     cd HydraDAEMON
+       node .
+       
     echo "================================================="
     
     read -p "Do you want to run the Dashboard (Terminal 1) now? (y/n): " choice
