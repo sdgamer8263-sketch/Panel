@@ -51,24 +51,24 @@ add_node() {
     
     # 1. Git Clone
     if [ -d "HydraDAEMON" ]; then
-        echo -e "${RED}Directory HydraDAEMON already exists. Skipping clone.${NC}"
+        echo -e "${YELLOW}[!] Directory HydraDAEMON already exists. Entering directory...${NC}"
     else
-        git clone https://github.com/hydren-dev/HydraDAEMON
+        git clone https://github.com/hydren-dev/HydraDAEMON || { echo -e "${RED}Clone failed${NC}"; return; }
     fi
 
     # 2. Enter Directory
-    cd HydraDAEMON || { echo "Failed to enter directory"; return; }
+    cd HydraDAEMON || { echo -e "${RED}Failed to enter directory${NC}"; return; }
 
     # 3. NPM Install
     echo -e "${YELLOW}[*] Installing dependencies...${NC}"
     npm install
 
     # 4. Configure
-    echo -e "${GREEN}[*] Create your configuration file.${NC}"
-    echo "Please create/paste your configuration (usually config.json or config.yml)."
-    echo "Use 'nano config.json' to edit manually if needed."
-    read -p "Press Enter to open nano editor to paste your config (Save with Ctrl+O, Exit with Ctrl+X)..."
-    nano config.json
+    echo -e "${GREEN}[*] Configuration Setup${NC}"
+    read -p "Do you want to create/edit config.json now? (y/n): " edit_conf
+    if [[ "$edit_conf" == "y" || "$edit_conf" == "Y" ]]; then
+        nano config.json
+    fi
 
     # 5. Start
     echo -e "${GREEN}[*] Starting Node...${NC}"
@@ -79,32 +79,37 @@ add_node() {
     read -p "Press Enter to return to menu..."
 }
 
-# --- Function: Again Start (Restart Services) ---
+# --- Function: Start Services (Fixed Logic) ---
 start_services() {
-    echo -e "${YELLOW}[*] Instructions to Restart Dashboard & Daemon${NC}"
-    echo "================================================="
-    
-    echo -e "${CYAN}Dashboard Starting:${NC}"
-     cd oversee-fixed
-     node .
-    echo "Node Starting"
-      Create a new terminal session (+)
-     cd HydraDAEMON
-       node .
-       
-    echo "================================================="
-    
-    read -p "Do you want to run the Dashboard (Terminal 1) now? (y/n): " choice
-    if [[ "$choice" == "y" || "$choice" == "Y" ]]; then
-        if [ -d "oversee-fixed" ]; then
-            cd oversee-fixed
-            node .
-            cd ..
-        else
-            echo -e "${RED}[!] Directory 'oversee-fixed' not found.${NC}"
-        fi
-    fi
-    read -p "Press Enter to return to menu..."
+    show_banner
+    echo -e "${YELLOW}[*] Service Management${NC}"
+    echo "1) Start Dashboard (oversee-fixed)"
+    echo "2) Start Node (HydraDAEMON)"
+    echo "0) Back to Main Menu"
+    echo ""
+    read -p "Select service to start: " s_choice
+
+    case $s_choice in
+        1)
+            if [ -d "oversee-fixed" ]; then
+                cd oversee-fixed && node .
+                cd ..
+            else
+                echo -e "${RED}[!] Directory 'oversee-fixed' not found.${NC}"
+            fi
+            ;;
+        2)
+            if [ -d "HydraDAEMON" ]; then
+                cd HydraDAEMON && node .
+                cd ..
+            else
+                echo -e "${RED}[!] Directory 'HydraDAEMON' not found.${NC}"
+            fi
+            ;;
+        0) return ;;
+        *) echo -e "${RED}Invalid option.${NC}" ;;
+    esac
+    read -p "Press Enter to continue..."
 }
 
 # --- Main Logic Loop ---
@@ -112,7 +117,7 @@ while true; do
     show_banner
     echo -e "${GREEN}1)${NC} Install Panel (Auto OS Detect)"
     echo -e "${GREEN}2)${NC} Add Node"
-    echo -e "${GREEN}3)${NC} Start Services (Again Start)"
+    echo -e "${GREEN}3)${NC} Start Services"
     echo -e "${RED}0)${NC} Exit"
     echo ""
     read -p "Select an option: " option
