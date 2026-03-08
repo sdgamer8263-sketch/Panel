@@ -85,6 +85,7 @@ while true; do
         9) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/fea/fea.sh) ;;
         10) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/PufferPanel/PufferPanel.sh) ;;
         11)  bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Hydra/run.sh) ;;
+        12)bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Skyport/run.sh) ;;
         0)
             echo -e "${YELLOW}Redirecting... Goodbye!${NC}"
             
