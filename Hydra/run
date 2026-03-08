@@ -92,7 +92,6 @@ install_panel() {
     echo -e "${CYAN}* Starting Skyport (Hydra)...${NC}"
     echo -e "${GREEN}* Skyport Installed and Started on Port 3001 and for Cloudflare Localhost:3001 (hhtp)${NC}"
     
-    node .
     
     # If the user stops the node process with Ctrl+C, they return here
     read -p "Press Enter to return to menu..."
