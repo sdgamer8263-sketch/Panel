@@ -27,8 +27,8 @@ show_menu() {
     show_banner
     # The text below uses a blue background as requested for the list
     echo -e "${BG_BLUE}${GREEN} Please select an option from the list below: ${NC}\n"
-    echo -e "${CYAN}1.${NC} Install (Run ctrl.sh)"
-    echo -e "${CYAN}2.${NC} Uninstall (Run uctrl.sh.sh)"
+    echo -e "${CYAN}1.${NC} Install(V1.11) "
+    echo -e "${CYAN}2.${NC} Install (V.2.0) "
     echo -e "${CYAN}3.${NC} Exit\n"
     echo -e "${YELLOW}===============================================${NC}"
 }
