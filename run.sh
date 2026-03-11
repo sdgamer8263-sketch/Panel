@@ -78,7 +78,7 @@ while true; do
     read -p "Enter your choice [0-9]: " main_choice
 
     case $main_choice in
-        1) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/ctrl/uctrl.sh) ;;
+        1) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/ctrl/run.sh) ;;
         2) mythical_submenu ;;
         3) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/pterodactyl/upterodactyl.sh) ;;
         4) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Jexactyl/uJexactyl.sh) ;;
