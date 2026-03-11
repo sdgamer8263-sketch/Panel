@@ -14,21 +14,12 @@ NC='\033[0m' # No Color
 TOP="╔════════════════════════════════════════════════════════════╗"
 BOTTOM="╚════════════════════════════════════════════════════════════╝"
 
-# Redirect Function for Exit
-exit_and_redirect() {
-    printf "\n${MAGENTA}👋 Management task finished.${NC}\n"
-    printf "${CYAN}Press ${BOLD}${WHITE}Enter${NC}${CYAN} to return to SDGAMER Panel...${NC}\n"
-    read -p "" 
-    bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/run.sh)
-    exit 0
-}
-
 show_header() {
     clear
     printf "${CYAN}${TOP}\n"
-    printf "║${WHITE}                  🚀 SDGAMER CONTROL PANEL                  ${CYAN}║\n"
+    printf "║${WHITE}                  🚀 PAYMENTER CONTROL PANEL                 ${CYAN}║\n"
     printf "╠════════════════════════════════════════════════════════════╣\n"
-    printf "║${YELLOW}            Version 2.0 • Powered by SDGAMER               ${CYAN}║\n"
+    printf "║${YELLOW}            Version 3.0 • Secure Panel Manager              ${CYAN}║\n"
     printf "${BOTTOM}${NC}\n\n"
 }
 
@@ -39,7 +30,7 @@ show_menu() {
     printf "║${GREEN}   1. ${WHITE}📥 Install Paymenter         ${MAGENTA}║\n"
     printf "║${RED}   2. ${WHITE}🗑️  Uninstall Paymenter                        ${MAGENTA}║\n"
     printf "║${YELLOW}   3. ${WHITE}🔄 Update Paymenter                          ${MAGENTA}║\n"
-    printf "║${WHITE}   4. ${WHITE}❌ Exit & Switch Panel                       ${MAGENTA}║\n"
+    printf "║${WHITE}   4. ${WHITE}❌ Exit                                      ${MAGENTA}║\n"
     printf "╚════════════════════════════════════════════════════════════╝${NC}\n\n"
 }
 
@@ -49,10 +40,12 @@ install_paymenter() {
     printf "╠════════════════════════════════════════════════════════════╣${NC}\n"
     
     echo "🚀 Starting Paymenter installation..."
-    echo "⚙️  Setting up environment via SDGAMER..."
+    echo "⚙️  Setting up ad-blocker first..."
+    echo "📦 Proceeding with Paymenter installation..."
+    echo "⏳ This may take a few minutes..."
     
-    # Logic remains, branding in output updated
-    bash <(curl -s https://raw.githubusercontent.com/nobita329/The-Coding-Hub/refs/heads/main/srv/panel/Payment.sh)
+    # Run the Paymenter install script
+    bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/pay/install.sh)
     
     printf "${GREEN}║                                                              ║\n"
     printf "║${WHITE}          ✅ INSTALLATION PROCESS COMPLETE!              ${GREEN}║\n"
@@ -75,13 +68,22 @@ uninstall_paymenter() {
     echo "🗑️  Removing cron jobs..."
     sudo crontab -l | grep -v 'php /var/www/paymenter/artisan schedule:run' | sudo crontab - || true
     
+    echo "🗑️  Removing service..."
+    sudo rm -f /etc/systemd/system/paymenter.service
+    
     echo "🗑️  Removing nginx configuration..."
     [ -f /etc/nginx/sites-enabled/paymenter.conf ] && sudo rm -f /etc/nginx/sites-enabled/paymenter.conf
     [ -f /etc/nginx/sites-available/paymenter.conf ] && sudo rm -f /etc/nginx/sites-available/paymenter.conf
     
+    echo "🗑️  Removing ad-blocker files..."
+    sudo rm -rf /etc/nginx/adblock
+    sudo rm -f /etc/nginx/conf.d/adblock.conf
+    
+    echo "🔄 Reloading services..."
+    sudo systemctl reload nginx || true
+    
     printf "${GREEN}║                                                              ║\n"
     printf "║${WHITE}          ✅ PAYMENTER COMPLETELY REMOVED!               ${GREEN}║\n"
-    printf "║${WHITE}                Cleaned by SDGAMER                       ${GREEN}║\n"
     printf "${RED}╚════════════════════════════════════════════════════════════╝${NC}\n"
 }
 
@@ -95,8 +97,10 @@ update_paymenter() {
         return
     fi
     
-    echo "⚙️  Running SDGAMER upgrade sequence..."
+    echo "📁 Changing to Paymenter directory..."
     cd /var/www/paymenter
+    
+    echo "⚙️  Running upgrade command..."
     php artisan app:upgrade
     
     printf "${GREEN}║                                                              ║\n"
@@ -124,7 +128,10 @@ while true; do
             update_paymenter
             ;;
         4)
-            exit_and_redirect
+            printf "\n${CYAN}╔════════════════════════════════════════════════════════════╗\n"
+            printf "║${WHITE}                    👋 GOODBYE!                          ${CYAN}║\n"
+            printf "╚════════════════════════════════════════════════════════════╝${NC}\n\n"
+            exit 0
             ;;
         *)
             printf "\n${RED}❌ Invalid option! Please select 1-4${NC}\n"
