@@ -72,7 +72,7 @@ while true; do
     echo -e "${GREEN}13)${NC}Darco Panel"
     echo -e "${GREEN}14)${NC}Airlink Panel (by Jishnu Bhi)"
     echo -e "${GREEN}15)${NC}Convoy Panel"
-    echo -e "${GREEN}16)${NC} Heliactyl Dashboard"
+    echo -e "${GREEN}16)${NC} Heliactyl Dashboard(soon)"
     echo -e "${RED}0) Exit${NC}"
     echo -e "${CYAN}-------------------------------------------------------${NC}"
 
@@ -94,7 +94,7 @@ while true; do
         13) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Darco/run.sh) ;;
         14) bash <(curl -s https://airlink.jishnu.fun) ;;
         15) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/convoy/run.sh) ;;
-        16)bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Heli/install.sh) ;;
+     
         0)
             echo -e "${YELLOW}Redirecting... Goodbye!${NC}"
             
