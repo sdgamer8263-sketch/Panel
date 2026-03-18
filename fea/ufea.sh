@@ -72,7 +72,7 @@ while true; do
   banner
   echo -e "${YELLOW}1) Install FeatherPanel"
   echo "2) Uninstall FeatherPanel"
-  echo "3) Exit & Switch Panel${NC}"
+  echo "3) Exit & Switch Panel ${NC}"
   echo "──────────────────────────────────────"
   read -rp "Select option → " opt
 
