@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ====================================================
-#       PTERODACTYL CONTROL CENTER v2.1
+#       PTERODACTYL CONTROL CENTER 
 # ====================================================
 
 # --- COLORS & STYLING ---
