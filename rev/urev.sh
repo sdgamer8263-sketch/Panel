@@ -29,7 +29,7 @@ install_ptero() {
     echo "│        🚀 SDGAMER reviactyl Install          │"
     echo "└──────────────────────────────────────────────┘${NC}"
     # Link remains for functionality, branding updated in flow
-    bash <(curl -s https://raw.githubusercontent.com/nobita329/The-Coding-Hub/refs/heads/main/srv/panel/tool/reviactyl.sh)
+    bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/rev/reviactyl.sh)
     echo -e "${GREEN}✔ Installation Complete${NC}"
     read -p "Press Enter to return..."
 }
