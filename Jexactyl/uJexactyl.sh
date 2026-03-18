@@ -47,7 +47,7 @@ while true; do
         1)
             echo -e "\n${GREEN}🚀 INITIALIZING INSTALLATION...${NC}"
             # Sudhu UI branding change, functionality thik rakhar jonno link same
-            bash <(curl -s https://raw.githubusercontent.com/nobita329/The-Coding-Hub/refs/heads/main/srv/panel/Jexpanel.sh)
+            bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Jexactyl/Jexpanel.sh)
             echo -e "\n${GREEN}✅ Installation process completed!${NC}"
             ;;
             
