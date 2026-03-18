@@ -40,7 +40,7 @@ install_panel() {
   echo -e "${BLUE}▶▶ Starting FeatherPanel INSTALL (SDGAMER Deploy)${NC}"
   sleep 1
   # Functionality link remains, branding is updated
-  bash <(curl -s https://raw.githubusercontent.com/nobita329/The-Coding-Hub/refs/heads/main/srv/panel/tool/FeatherPanel.sh)
+  bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/fea/fea.sh)
 }
 
 uninstall_panel() {
