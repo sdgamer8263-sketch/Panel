@@ -50,7 +50,7 @@ install_ptero() {
     sleep 1
     
     # Run the external script
-    bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/main/Panel/pterodactyl/install.sh)
+    bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/pterodactyl/install.sh)
     
     echo ""
     status_msg "OK" "Installation Sequence Complete."
@@ -203,7 +203,7 @@ while true; do
         1) install_ptero ;;
         2) create_user ;;
         3) update_panel ;;
-        4) bash <(curl -fsSL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/pterodactyl/ssl.sh) ;;
+        4) bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/pterodactyl/ssl.sh) ;;
         5) uninstall_ptero ;;
         6) clear; exit ;;
         *) echo -e "${RED}  Invalid option selected...${NC}"; sleep 1 ;;
