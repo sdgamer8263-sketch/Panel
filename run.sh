@@ -175,7 +175,7 @@ while true; do
     echo -e "${GREEN}3)${NC} Payment Panel"
     echo -e "${GREEN}4)${NC} Convoy Panel"
     echo -e "${GREEN}5)${NC} Control Panel"
-    echo -e "${GREEN}6)${NC} Custom Script (SST)"
+    echo -e "${GREEN}6)${NC} VPS Control Panel"
     echo -e "${RED}0) Exit${NC}"
     echo -e "${CYAN}-------------------------------------------------------${NC}"
 
@@ -187,7 +187,7 @@ while true; do
         3) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/pay/upay.sh) ;;
         4) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/convoy/run.sh) ;;
         5) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/ctrl/run.sh) ;;
-        6) bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/sst/main/run.sh) ;;
+        6) bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/vpsctrl/HVM) ;;
         0)
             echo -e "${YELLOW}Redirecting... Goodbye!${NC}"
             exit 0
