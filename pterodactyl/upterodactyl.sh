@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ====================================================
-#       PTERODACTYL CONTROL CENTER V 3.9
+#       PTERODACTYL CONTROL CENTER 
 # ====================================================
 
 # --- COLORS & STYLING ---
@@ -14,7 +14,7 @@ CYAN='\033[0;36m'
 WHITE='\033[0;37m'
 BOLD='\033[1m'
 NC='\033[0m'
-GRAY='\033[1;30m' # Added gray since it was used in your menu
+GRAY='\033[1;30m'
 
 # --- UI HELPER FUNCTIONS ---
 
@@ -123,29 +123,6 @@ uninstall_ptero() {
     pause
 }
 
-# ================= UPDATE FUNCTION =================
-update_panel() {
-    show_header "SYSTEM UPDATE"
-
-    # Check if the panel is actually installed before trying to update
-    if [ ! -d /var/www/pterodactyl ]; then
-        status_msg "ERR" "Panel not found in /var/www/pterodactyl"
-        status_msg "ERR" "Cannot update a non-existent installation."
-        pause
-        return
-    fi
-
-    status_msg "WAIT" "Fetching latest update script..."
-    echo ""
-    
-    # Running your external update script
-    bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/pterodactyl/up.sh)
-
-    echo ""
-    status_msg "OK" "Update process finished."
-    pause
-}
-
 # ===================== MAIN MENU =====================
 while true; do
     clear
@@ -187,7 +164,7 @@ while true; do
     case $choice in
         1) install_ptero ;;
         2) create_user ;;
-        3) update_panel ;;
+        3) bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/pterodactyl/up.sh) ;;
         4) bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/pterodactyl/ssl.sh) ;;
         5) uninstall_ptero ;;
         6) clear; exit ;;
