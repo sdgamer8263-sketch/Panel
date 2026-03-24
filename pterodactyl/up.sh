@@ -3,8 +3,13 @@
 # Colors setup
 CYAN='\033[0;36m'
 YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+PANEL_DIR="/var/www/pterodactyl"
+
+# SDGAMER Banner
 clear
 echo -e "${CYAN}"
 cat << "EOF"
@@ -20,54 +25,42 @@ echo -e "${YELLOW}           Welcome to SKA HOST (SDGAMER)${NC}"
 echo -e "${CYAN}=================================================${NC}"
 echo ""
 
-
-# Colors for output
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-NC='\033[0m'
-
-echo -e "${GREEN}=== SKA HOSTING Panel Installer & Updater ===${NC}"
-
-# User Inputs
-read -p "Enter Pterodactyl Version (e.g., v1.11.7): " VERSION
-read -p "Enter your Cloudflare Domain (e.g., panel.sub.com): " FQDN
-
-PANEL_DIR="/var/www/pterodactyl"
-
+# Update Function
 update_panel() {
-    echo -e "${GREEN}Panel is already installed. Starting Update/Downgrade to ${VERSION}...${NC}"
+    echo -e "${GREEN}Starting Update/Downgrade setup for version ${VERSION}...${NC}"
     cd $PANEL_DIR
     
-    # Turn on maintenance mode
+    # Put panel in maintenance mode
     php artisan down
     
-    # Download and extract specific version
+    # Download and extract the specified version
     curl -L https://github.com/pterodactyl/panel/releases/download/${VERSION}/panel.tar.gz | tar -xzv
     
-    # Set permissions
+    # Set correct permissions
     chmod -R 755 storage/* bootstrap/cache/
     
-    # Update dependencies
+    # Update dependencies via Composer
     composer install --no-dev --optimize-autoloader
     
-    # Clear caches and run database updates
+    # Clear caches & Migrate database
     php artisan view:clear
     php artisan config:clear
     php artisan migrate --seed --force
     
-    # Fix ownership
+    # Fix ownership & Restart Queue
     chown -R www-data:www-data $PANEL_DIR/*
     php artisan queue:restart
     
-    # Turn off maintenance mode
+    # Take panel out of maintenance mode
     php artisan up
     echo -e "${GREEN}Successfully updated/downgraded to ${VERSION}!${NC}"
 }
 
+# Install Function
 install_panel() {
-    echo -e "${GREEN}Panel not found. Starting fresh installation for ${VERSION}...${NC}"
+    echo -e "${GREEN}Starting fresh installation & setup for ${VERSION}...${NC}"
 
-    # 1. Install System Dependencies (Ubuntu/Debian based)
+    # 1. Install System Dependencies
     apt update -y
     apt -y install software-properties-common curl apt-transport-https ca-certificates gnupg
     LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
@@ -99,12 +92,12 @@ install_panel() {
     sed -i "s|APP_URL=http://localhost|APP_URL=https://${FQDN}|g" .env
     sed -i "s/DB_PASSWORD=/DB_PASSWORD=${DB_PASSWORD}/g" .env
 
-    # Setup Database Tables (No user creation here as requested)
+    # Setup Database Tables
     php artisan migrate --seed --force
 
     chown -R www-data:www-data $PANEL_DIR/*
 
-    # 5. Setup Nginx (Configured for Cloudflare proxy)
+    # 5. Setup Nginx
     cat <<EOF > /etc/nginx/sites-available/pterodactyl.conf
 server {
     listen 80;
@@ -176,16 +169,23 @@ EOF
 
     systemctl enable --now pteroq.service redis-server
 
-    echo -e "${GREEN}Fresh installation completed! Panel should now be available at your domain.${NC}"
+    echo -e "${GREEN}Fresh installation & setup completed! Panel is available at your domain.${NC}"
 }
 
+# ==========================================
 # Main Execution Logic
+# ==========================================
+
+# Check if the panel directory and .env file exist
 if [ -d "$PANEL_DIR" ] && [ -f "$PANEL_DIR/.env" ]; then
-    # Update the Domain in .env just in case it changed
-    sed -i "s|^APP_URL=.*|APP_URL=https://${FQDN}|g" $PANEL_DIR/.env
+    echo -e "${GREEN}Pterodactyl Panel detected on this system!${NC}"
+    read -p "Enter Pterodactyl Version to Update/Downgrade (e.g., v1.11.7): " VERSION
     update_panel
 else
+    echo -e "${YELLOW}No existing Panel found. Preparing for Fresh Installation.${NC}"
+    read -p "Enter Pterodactyl Version (e.g., v1.11.7): " VERSION
+    read -p "Enter your Cloudflare Domain (e.g., panel.sub.com): " FQDN
     install_panel
 fi
 
-echo -e "${GREEN}Process Finished!${NC}"
+echo -e "${CYAN}Process Finished Successfully!${NC}"
