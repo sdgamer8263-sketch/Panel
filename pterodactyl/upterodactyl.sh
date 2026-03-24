@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ====================================================
-#       PTERODACTYL CONTROL CENTER 
+#       PTERODACTYL CONTROL CENTER V 3.9
 # ====================================================
 
 # --- COLORS & STYLING ---
@@ -14,6 +14,7 @@ CYAN='\033[0;36m'
 WHITE='\033[0;37m'
 BOLD='\033[1m'
 NC='\033[0m'
+GRAY='\033[1;30m' # Added gray since it was used in your menu
 
 # --- UI HELPER FUNCTIONS ---
 
@@ -126,38 +127,22 @@ uninstall_ptero() {
 update_panel() {
     show_header "SYSTEM UPDATE"
 
+    # Check if the panel is actually installed before trying to update
     if [ ! -d /var/www/pterodactyl ]; then
         status_msg "ERR" "Panel not found in /var/www/pterodactyl"
+        status_msg "ERR" "Cannot update a non-existent installation."
         pause
         return
     fi
 
-    status_msg "INFO" "Putting panel into Maintenance Mode..."
-    cd /var/www/pterodactyl
-    php artisan down
-    sudo rm -rf /var/www/pterodactyl/*
-    cd /var/www/pterodactyl
-    status_msg "INFO" "Downloading latest release..."
-    curl -Lo panel.tar.gz https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz
-    tar -xzvf panel.tar.gz
-    status_msg "INFO" "Setting permissions..."
-    chmod -R 755 storage/* bootstrap/cache/
-
-    status_msg "INFO" "Updating Composer dependencies..."
-    COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader
+    status_msg "WAIT" "Fetching latest update script..."
+    echo ""
     
-    status_msg "INFO" "Clearing cache and database migration..."
-    php artisan view:clear
-    php artisan config:clear
-    php artisan migrate --seed --force
-    chown -R www-data:www-data /var/www/pterodactyl/*
-    
-    status_msg "INFO" "Restarting Queue Workers..."
-    php artisan queue:restart
-    php artisan up
+    # Running your external update script
+    bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/pterodactyl/up.sh)
 
     echo ""
-    status_msg "OK" "Panel Updated Successfully."
+    status_msg "OK" "Update process finished."
     pause
 }
 
