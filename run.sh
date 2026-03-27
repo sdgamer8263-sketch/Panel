@@ -28,7 +28,7 @@ show_banner() {
 feather_submenu() {
     while true; do
         show_banner
-        echo -e "${MAGENTA}                 FEATHER PANEL OPTIONS                 ${NC}"
+        echo -e "${MAGENTA}              FEATHER PANEL OPTIONS   (V 26.1)              ${NC}"
         echo -e "${CYAN}-------------------------------------------------------${NC}"
         echo -e "${GREEN}1)${NC} Feather Panel"
         echo -e "${GREEN}2)${NC} Feather Panel (Auto Install)"
@@ -49,7 +49,7 @@ feather_submenu() {
 jexactyl_submenu() {
     while true; do
         show_banner
-        echo -e "${MAGENTA}                JEXACTYL PANEL & DASH                  ${NC}"
+        echo -e "${MAGENTA}              JEXACTYL PANEL & DASH  (V 26.1)                ${NC}"
         echo -e "${CYAN}-------------------------------------------------------${NC}"
         echo -e "${GREEN}1)${NC} Jexactyl"
         echo -e "${GREEN}2)${NC} Jexapanel"
@@ -70,7 +70,7 @@ jexactyl_submenu() {
 panels_submenu() {
     while true; do
         show_banner
-        echo -e "${MAGENTA}                    PANELS MENU                        ${NC}"
+        echo -e "${MAGENTA}                PANELS MENU (V 26.1)                        ${NC}"
         echo -e "${CYAN}-------------------------------------------------------${NC}"
         echo -e "${GREEN}1)${NC} Pterodactyl Panel"
         echo -e "${GREEN}2)${NC} Puffer Panel"
@@ -128,7 +128,7 @@ mythical_submenu() {
 dashboard_submenu() {
     while true; do
         show_banner
-        echo -e "${MAGENTA}                   DASHBOARD MENU                      ${NC}"
+        echo -e "${MAGENTA}               DASHBOARD MENU (V 26.1)                     ${NC}"
         echo -e "${CYAN}-------------------------------------------------------${NC}"
         echo -e "${GREEN}1)${NC} Mythical Dash"
         echo -e "${GREEN}2)${NC} Heliactyl Dashboard (soon)"
@@ -169,7 +169,7 @@ vps_submenu() {
 # Main Menu Loop
 while true; do
     show_banner
-    echo -e "${MAGENTA}                     MAIN MENU                         ${NC}"
+    echo -e "${MAGENTA}                     MAIN MENU     (V 26.1)              ${NC}"
     echo -e "${CYAN}-------------------------------------------------------${NC}"
     echo "Select an option:"
     echo -e "${GREEN}1)${NC} Panels"
