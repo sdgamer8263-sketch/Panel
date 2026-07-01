@@ -58,7 +58,7 @@ jexactyl_submenu() {
         
         read -p "Select option [1-2 or 0]: " jex_choice
         case $jex_choice in
-            1) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Jexactyl/uJexactyl.sh); break ;;
+            1) bash <(curl -sSL https://raw.githubusercontent.com/nobita329/Nobita-Cloud/main/panel/Jexactyl/install.sh); break ;;
             2) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Jexapanel/Jp.sh); break ;;
             0) return ;;
             *) echo -e "${RED}Invalid option. Please try again.${NC}"; sleep 1 ;;
@@ -187,8 +187,8 @@ while true; do
     case $main_choice in
         1) panels_submenu ;;
         2) dashboard_submenu ;;
-        3) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/pay/upay.sh) ;;
-        4) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/convoy/run.sh) ;;
+        3) bash <(curl -sSL https://raw.githubusercontent.com/nobita329/Nobita-Cloud/main/panel/paymenter/run.sh) ;;
+        4) bash <(curl -sSL https://raw.githubusercontent.com/nobita329/Nobita-Cloud/main/panel/Convey/install.sh) ;;
         5) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/ctrl/run.sh) ;;
         6) vps_submenu ;;
         7) bash <(curl -sSL https://raw.githubusercontent.com/nobita329/Nobita-Cloud/main/panel/whmc/install.sh) ;;
