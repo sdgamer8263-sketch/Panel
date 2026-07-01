@@ -178,7 +178,7 @@ while true; do
     echo -e "${GREEN}4)${NC} Convoy Panel"
     echo -e "${GREEN}5)${NC} Control Panel"
     echo -e "${GREEN}6)${NC} VPS Control Panel"
-    echo -e "${GREEN}7)${NC} WHMC"
+    echo -e "${GREEN}7)${NC} WHMC Panel"
     echo -e "${RED}0) Exit${NC}"
     echo -e "${CYAN}-------------------------------------------------------${NC}"
 
