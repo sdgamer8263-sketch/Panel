@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# --- CONFIG & COLORS (Sema UI Modern Palette) ---
+# --- SEMA NEON THEME ---
 CYAN='\033[38;5;51m'
 PURPLE='\033[38;5;141m'
 GRAY='\033[38;5;242m'
@@ -9,93 +9,172 @@ GREEN='\033[38;5;82m'
 RED='\033[38;5;196m'
 GOLD='\033[38;5;214m'
 NC='\033[0m'
-line(){ echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"; }
-step(){ echo -e "${BLUE}➜ $1${RESET}"; }
-ok(){ echo -e "${GREEN}✔ $1${RESET}"; }
-warn(){ echo -e "${YELLOW}⚠ $1${RESET}"; }
-fail(){ echo -e "${RED}✖ $1${RESET}"; }
-# --- UI EFFECTS ---
-type_write() {
-    local text="$1"
-    local delay=0.01
-    for (( i=0; i<${#text}; i++ )); do
-        echo -ne "${text:$i:1}"
-        sleep $delay
-    done
-    echo ""
-}
+HEADER_LINE="${GRAY}────────────────────────────────────────────────────────────${NC}"
+GITHUB_REPO="pterodactyl/panel"
+PHP_VERSION="8.3"
 
-loading_bar() {
-    echo -ne "  ${GRAY}[${NC}"
-    for i in {1..25}; do
-        echo -ne "${CYAN}#${NC}"
-        sleep 0.02
-    done
-    echo -e "${GRAY}]${NC} ${GREEN}COMPLETE${NC}"
-}
-
-# --- HEADER & BRANDING ---
-show_header() {
+# --- UI HELPERS ---
+show_banner() {
     clear
-    echo -e "${PURPLE}┌──────────────────────────────────────────────────────────┐${NC}"
-    echo -e "${PURPLE}│${NC}  ${CYAN}🦅 PTERODACTYL AUTO-DEPLOY${NC} ${GRAY}v11.0${NC}          ${GRAY}$(date +"%H:%M")${NC}  ${PURPLE}│${NC}"
-    echo -e "${PURPLE}└──────────────────────────────────────────────────────────┘${NC}"
+    echo -e "${CYAN}"
+    cat << "EOF"
+               .                                      .o8                          .               oooo  
+             .o8                                     "888                        .o8               `888  
+oo.ooooo.  .o888oo  .ooooo.  oooo d8b  .ooooo.   .oooo888   .oooo.    .ooooo.  .o888oo oooo    ooo  888  
+ 888' `88b   888   d88' `88b `888""8P d88' `88b d88' `888  `P  )88b  d88' `"Y8   888    `88.  .8'   888  
+ 888   888   888   888ooo888  888     888   888 888   888   .oP"888  888         888     `88..8'    888  
+ 888   888   888 . 888    .o  888     888   888 888   888  d8(  888  888   .o8   888 .    `888'     888  
+ 888bod8P'   "888" `Y8bod8P' d888b    `Y8bod8P' `Y8bod88P" `Y888""8o `Y8bod8P'   "888"     .8'     o888o 
+ 888                                                                                   .o..P'            
+o888o                                                                                  `Y8P'             
+                                                                                                         
+EOF
+    echo -e "           ${WHITE}PREMIUM PTERODACTYL INSTALLER${NC}"
+    echo -e "${HEADER_LINE}"
 }
 
-# --- INITIALIZATION SEQUENCE ---
-show_header
-echo -e "  ${CYAN}BOOT PROTOCOLS${NC}"
-echo -ne "  ${GRAY}├─ KERNEL :${NC} " ; type_write "Initializing core deployment modules..."
-echo -ne "  ${GRAY}├─ MEMORY :${NC} " ; type_write "Allocating virtual server resources..."
-echo -ne "  ${GRAY}└─ STATUS :${NC} " ; loading_bar
-echo -e "${GRAY}────────────────────────────────────────────────────────────${NC}"
+ok() {
+    echo -e "  ${GREEN}[OK]${NC} $1"
+}
 
-# --- CONFIGURATION INPUT ---
-while true; do
-    echo -e "\n  ${GOLD}CONFIGURATION REQUIRED${NC}"
-    echo -ne "  ${WHITE}Enter Target Domain${NC} ${GRAY}(panel.example.com):${NC} "
-    read DOMAIN
-    DOMAIN=${DOMAIN:-panel.example.com}
+step() {
+    echo -e "\n  ${PURPLE}::${NC} ${WHITE}$1${NC}"
+}
 
-    echo -e "  ${GRAY}Target Locked :${NC} ${WHITE}$DOMAIN${NC}"
-    echo -ne "  ${CYAN}Confirm deployment? (y/n):${NC} "
-    read CONFIRM
-
-    if [[ "$CONFIRM" =~ ^[Yy]$ ]]; then
-        echo -e "  ${GREEN}✔ Identity Confirmed.${NC}"
-        break
+# --- INPUT FUNCTION ---
+ask() {
+    local label=$1
+    local default=$2
+    local var_name=$3
+    echo -ne "  ${PURPLE}•${NC} ${WHITE}$label${NC} ${GRAY}[$default]${NC}\n  ${GRAY}╰─>${NC} "
+    read input
+    if [ -z "$input" ]; then
+        eval "$var_name=\"$default\""
     else
-        echo -e "  ${RED}⚠ Re-initializing input...${NC}"
+        eval "$var_name=\"$input\""
     fi
+}
+
+# --- TIMEOUT INPUT (10s auto-default) ---
+ask_timeout() {
+    local label=$1
+    local default=$2
+    local var_name=$3
+    echo -ne "  ${PURPLE}•${NC} ${WHITE}$label${NC} ${GRAY}[$default]${NC}\n  ${GRAY}╰─>${NC} "
+    if ! read -t 10 input; then
+        echo -e "\n  ${GOLD}⌛ Timeout — using default: ${WHITE}$default${NC}"
+        eval "$var_name=\"$default\""
+        return
+    fi
+    if [ -z "$input" ]; then
+        eval "$var_name=\"$default\""
+    else
+        eval "$var_name=\"$input\""
+    fi
+}
+
+# --- FETCH GITHUB VERSIONS ---
+fetch_github_versions() {
+    local repo=$1
+    echo -e "  ${GRAY}Fetching releases from ${WHITE}$repo${GRAY}...${NC}" >&2
+    local json
+    json=$(curl -sf "https://api.github.com/repos/$repo/releases?per_page=20" 2>/dev/null) || {
+        echo -e "  ${RED}Failed to fetch releases.${NC}" >&2
+        return 1
+    }
+    echo "$json" | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+for r in data:
+    if r.get('prerelease', False):
+        continue
+    tag = r.get('tag_name', '')
+    if tag.startswith('v'):
+        print(tag)
+" 2>/dev/null || return 1
+}
+
+# --- VERSION SELECTOR (10s timeout) ---
+select_version() {
+    local repo=$1
+    local var_name=$2
+    local default="latest"
+    echo -e "\n  ${PURPLE}::${NC} ${WHITE}Available Panel Versions${NC}"
+    local tags=() disp=() i=0
+    while IFS= read -r tag; do
+        [[ -z "$tag" ]] && continue
+        tags+=("$tag")
+        i=$((i+1))
+        disp+=("  ${GRAY}$i.${NC} ${WHITE}$tag${NC}")
+    done < <(fetch_github_versions "$repo" 2>/dev/null) || true
+
+    if [[ ${#tags[@]} -eq 0 ]]; then
+        echo -e "  ${YELLOW}No versions found. Using latest.${NC}"
+        eval "$var_name=\"$default\""
+        return
+    fi
+
+    printf '%b\n' "${disp[@]}"
+    local max=${#tags[@]}
+    echo -ne "\n  ${PURPLE}•${NC} ${WHITE}Select version [1-$max]${NC} ${GRAY}[1 = latest]${NC}\n  ${GRAY}╰─>${NC} "
+    if ! read -t 10 choice; then
+        echo -e "\n  ${GOLD}⌛ Timeout — using latest: ${WHITE}${tags[0]}${NC}"
+        eval "$var_name=\"${tags[0]}\""
+        return
+    fi
+    if [[ -z "$choice" || "$choice" == "1" ]]; then
+        echo -e "  ${GREEN}→ ${WHITE}${tags[0]}${NC}"
+        eval "$var_name=\"${tags[0]}\""
+    elif [[ "$choice" =~ ^[0-9]+$ ]] && [[ $choice -ge 1 ]] && [[ $choice -le $max ]]; then
+        local idx=$((choice - 1))
+        echo -e "  ${GREEN}→ ${WHITE}${tags[$idx]}${NC}"
+        eval "$var_name=\"${tags[$idx]}\""
+    else
+        echo -e "  ${GREEN}→ ${WHITE}${tags[0]}${NC} (invalid input)"
+        eval "$var_name=\"${tags[0]}\""
+    fi
+}
+
+# --- START ---
+show_banner
+
+# --- DATA COLLECTION ---
+ask "Panel Domain" "panel.nobita.indevs.in" DOMAIN
+ask "Admin Email" "admin@gmail.com" EMAIL
+ask "Admin Username" "admin" USERNAME
+ask_timeout "Admin Password" "admin" PASSWORD
+select_version "$GITHUB_REPO" "version_PANEL"
+
+# --- FINAL VALIDATION LOOP ---
+echo -e "\n  ${GOLD}┌─[ REVIEW CONFIGURATION ]${NC}"
+echo -e "  ${GOLD}│${NC} ${GRAY}Domain:${NC}   $DOMAIN"
+echo -e "  ${GOLD}│${NC} ${GRAY}Email:${NC}    $EMAIL"
+echo -e "  ${GOLD}│${NC} ${GRAY}User:${NC}     $USERNAME"
+echo -e "  ${GOLD}│${NC} ${GRAY}Version:${NC}  $version_PANEL"
+echo -e "  ${GOLD}└───────────────────────────${NC}"
+
+while true; do
+    echo -ne "\n  ${CYAN}Start Installation?${NC} ${WHITE}(y/n)${NC}${GRAY}:${NC} "
+    read -n 1 -r CONFIRM
+    echo ""
+
+    case $CONFIRM in
+        [Yy]* )
+            echo -e "  ${GREEN}Proceeding to deployment...${NC}"
+            break
+            ;;
+        [Nn]* )
+            echo -e "  ${RED}Installation aborted by user.${NC}"
+            exit
+            ;;
+        * )
+            echo -e "  ${GRAY}Invalid input. Enter ${NC}${WHITE}y${NC}${GRAY} or ${NC}${WHITE}n${NC}${GRAY}.${NC}"
+            ;;
+    esac
 done
 
-echo -e "\n  ${PURPLE}CREDENTIAL SETUP${NC}"
-echo -ne "  ${GRAY}├─ Username${NC} ${WHITE}(default: admin)${NC}${GRAY}:${NC} "
-read USERNAME
-USERNAME=${USERNAME:-admin}
+echo -e "${HEADER_LINE}"
 
-echo -ne "  ${GRAY}└─ Password${NC} ${WHITE}(default: admin)${NC}${GRAY}:${NC} "
-read PASSWORD
-PASSWORD=${PASSWORD:-admin}
-
-# --- EXECUTION DASHBOARD ---
-echo -e "\n${PURPLE}┌──────────────────────────────────────────────────────────┐${NC}"
-echo -e "${PURPLE}│${NC}  ${CYAN}🚀 DEPLOYMENT MANIFEST${NC}                              ${PURPLE}│${NC}"
-echo -e "${PURPLE}└──────────────────────────────────────────────────────────┘${NC}"
-echo -e "  ${GRAY}DOMAIN   :${NC} ${WHITE}$DOMAIN${NC}"
-echo -e "  ${GRAY}USER     :${NC} ${WHITE}$USERNAME${NC}"
-echo -e "  ${GRAY}PASS     :${NC} ${WHITE}********${NC}"
-echo -e "${GRAY}────────────────────────────────────────────────────────────${NC}"
-
-echo -e "  ${GOLD}Executing Root Protocols...${NC}"
-# Logic for actual deployment would go here
-sleep 1
-
-echo -e "\n  ${GREEN}✔ SYSTEM DEPLOYED SUCCESSFULLY${NC}"
-echo -e "  ${GRAY}Access your panel at:${NC} ${CYAN}http://$DOMAIN${NC}"
-echo -e "${GRAY}────────────────────────────────────────────────────────────${NC}"
-# Add your actual install logic below this line
-step "Updating system packages..."
 # --- Dependencies ---
 apt update && apt install -y curl apt-transport-https ca-certificates gnupg unzip git tar sudo lsb-release
 
@@ -103,43 +182,47 @@ apt update && apt install -y curl apt-transport-https ca-certificates gnupg unzi
 OS=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
 
 if [[ "$OS" == "ubuntu" ]]; then
-    echo "✅ Detected Ubuntu. Adding PPA for PHP..."
+    echo "Detected Ubuntu. Adding PPA for PHP..."
     apt install -y software-properties-common
     LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 elif [[ "$OS" == "debian" ]]; then
-    echo "✅ Detected Debian. Skipping PPA and adding PHP repo manually..."
-    # Add SURY PHP repo for Debian
+    echo "Detected Debian. Adding SURY PHP repo..."
     curl -fsSL https://packages.sury.org/php/apt.gpg | gpg --dearmor -o /usr/share/keyrings/sury-php.gpg
     echo "deb [signed-by=/usr/share/keyrings/sury-php.gpg] https://packages.sury.org/php/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/sury-php.list
 fi
 
 # Add Redis GPG key and repo
-curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+rm -f /usr/share/keyrings/redis-archive-keyring.gpg
+curl -fsSL https://packages.redis.io/gpg | gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/redis.list
 
 apt update
 
 # --- Install PHP + extensions ---
-apt install -y php8.3 php8.3-{cli,fpm,common,mysql,mbstring,bcmath,xml,zip,curl,gd,tokenizer,ctype,simplexml,dom} mariadb-server nginx redis-server
-sleep 1
-ok "System updated."
-step "Installing dependencies..."
+apt install -y php${PHP_VERSION} php${PHP_VERSION}-{cli,fpm,common,mysql,mbstring,bcmath,xml,zip,curl,gd,tokenizer,ctype,simplexml,dom} mariadb-server nginx redis-server
+
 # --- Install Composer ---
-curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # --- Download Pterodactyl Panel ---
 mkdir -p /var/www/pterodactyl
 cd /var/www/pterodactyl
-curl -Lo panel.tar.gz https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz
-tar -xzvf panel.tar.gz
+if [[ "$version_PANEL" == "latest" ]]; then
+    step "Downloading latest panel release..."
+    curl -Lso panel.tar.gz https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz
+else
+    step "Downloading panel version $version_PANEL..."
+    curl -Lso panel.tar.gz "https://github.com/pterodactyl/panel/releases/download/${version_PANEL}/panel.tar.gz"
+fi
+tar -xzf panel.tar.gz
 chmod -R 755 storage/* bootstrap/cache/
 
 # --- MariaDB Setup ---
 DB_NAME=panel
 DB_USER=pterodactyl
 DB_PASS=yourPassword
-mariadb -e "CREATE USER '${DB_USER}'@'127.0.0.1' IDENTIFIED BY '${DB_PASS}';"
-mariadb -e "CREATE DATABASE ${DB_NAME};"
+mariadb -e "CREATE USER '${DB_USER}'@'127.0.0.1' IDENTIFIED BY '${DB_PASS}';" 2>/dev/null || true
+mariadb -e "CREATE DATABASE ${DB_NAME};" 2>/dev/null || true
 mariadb -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'127.0.0.1' WITH GRANT OPTION;"
 mariadb -e "FLUSH PRIVILEGES;"
 
@@ -157,11 +240,9 @@ if ! grep -q "^APP_ENVIRONMENT_ONLY=" .env; then
 fi
 
 # --- Install PHP dependencies ---
-echo "✅ Installing PHP dependencies..."
 COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader
 
 # --- Generate Application Key ---
-echo "✅ Generating application key..."
 php artisan key:generate --force
 
 # --- Run Migrations ---
@@ -172,20 +253,13 @@ chown -R www-data:www-data /var/www/pterodactyl/*
 apt install -y cron
 systemctl enable --now cron
 (crontab -l 2>/dev/null; echo "* * * * * php /var/www/pterodactyl/artisan schedule:run >> /dev/null 2>&1") | crontab -
-sleep 1
-ok "Dependencies installed."
-step "Generating SSL certificate..."
 
 # --- Nginx Setup ---
 mkdir -p /etc/certs/panel
-cd /etc/certs/panel
 openssl req -new -newkey rsa:4096 -days 3650 -nodes -x509 \
--subj "/C=NA/ST=NA/L=NA/O=NA/CN=Generic SSL Certificate" \
--keyout privkey.pem -out fullchain.pem
-sleep 1
-ok "SSL secured."
-step "Configuring NGINX..."
-sleep 1
+    -subj "/C=NA/ST=NA/L=NA/O=NA/CN=${DOMAIN}" \
+    -keyout /etc/certs/panel/privkey.pem -out /etc/certs/panel/fullchain.pem
+
 tee /etc/nginx/sites-available/pterodactyl.conf > /dev/null << EOF
 server {
     listen 80;
@@ -226,9 +300,8 @@ server {
 }
 EOF
 
-ln -s /etc/nginx/sites-available/pterodactyl.conf /etc/nginx/sites-enabled/pterodactyl.conf || true
+ln -sf /etc/nginx/sites-available/pterodactyl.conf /etc/nginx/sites-enabled/pterodactyl.conf
 nginx -t && systemctl restart nginx
-ok "Nginx online"
 
 # --- Queue Worker ---
 tee /etc/systemd/system/pteroq.service > /dev/null << 'EOF'
@@ -251,35 +324,52 @@ systemctl daemon-reload
 systemctl enable --now redis-server
 systemctl enable --now pteroq.service
 ok "Queue running"
-ok "NGINX configured."
 
 clear
 step "Create admin user"
-# --- Admin User ---
+
 cd /var/www/pterodactyl
+
+# Update .env settings
 sed -i '/^APP_ENVIRONMENT_ONLY=/d' .env
 echo "APP_ENVIRONMENT_ONLY=false" >> .env
-php artisan p:user:make -n --email=admin@gmail.com --username=${USERNAME} --password=$PASSWORD --admin=1 --name-first=My --name-last=Admin
-# ---------------- DONE ----------------
+sed -i '/RECAPTCHA_ENABLED=/d' .env
+echo 'RECAPTCHA_ENABLED=false' >> .env
+sed -i '/APP_NAME=/d' .env
+echo 'APP_NAME="SKA HOST"' >> .env
+TIMEZONE=$(timedatectl show --property=Timezone --value 2>/dev/null || echo "UTC")
+sed -i "s|APP_TIMEZONE=.*|APP_TIMEZONE=${TIMEZONE}|g" .env
 
-# --- FINAL DEPLOYMENT UI ---
+# SMTP defaults (user should update these)
+sed -i "s|MAIL_MAILER=.*|MAIL_MAILER=smtp|g" .env
+sed -i "s|MAIL_HOST=.*|MAIL_HOST=skahost@gmail.com|g" .env
+sed -i "s|MAIL_PORT=.*|MAIL_PORT=587|g" .env
+sed -i "s|MAIL_USERNAME=.*|MAIL_USERNAME=skahost@gmail.com|g" .env
+sed -i "s|MAIL_PASSWORD=.*|MAIL_PASSWORD=58@S5wZuWtpdDDX|g" .env
+sed -i "s|MAIL_ENCRYPTION=.*|MAIL_ENCRYPTION=tls|g" .env
+sed -i "s|MAIL_FROM_ADDRESS=.*|MAIL_FROM_ADDRESS=skahost@gmail.com|g" .env
+sed -i 's|MAIL_FROM_NAME=.*|MAIL_FROM_NAME="SKA HOST"|g' .env
 
-echo -e "\n${GREEN}┌──────────────────────────────────────────────────────────┐${NC}"
-echo -e "${GREEN}│${NC}  ${WHITE}🚀 DEPLOYMENT COMPLETED SUCCESSFULLY!${NC}                   ${GREEN}│${NC}"
-echo -e "${GREEN}└──────────────────────────────────────────────────────────┘${NC}"
+php artisan p:location:make --short=IN --long="India" 2>/dev/null || true
 
-echo -e "  ${CYAN}ACCESS PORTAL${NC}"
-echo -e "  ${GRAY}└─ URL      :${NC} ${WHITE}https://$DOMAIN${NC}"
-echo ""
-echo -e "  ${GOLD}ADMIN CREDENTIALS${NC}"
-echo -e "  ${GRAY}├─ Username :${NC} ${WHITE}${USERNAME}${NC}"
-echo -e "  ${GRAY}└─ Password :${NC} ${WHITE}${PASSWORD}${NC}"
+# --- Cache optimization ---
+php artisan view:clear
+php artisan config:clear
+php artisan cache:clear
+php artisan config:cache
+chown -R www-data:www-data /var/www/pterodactyl/*
+php artisan queue:restart
 
-echo -e "${GRAY}────────────────────────────────────────────────────────────${NC}"
+# --- Admin User ---
+php artisan p:user:make -n --email="$EMAIL" --username="${USERNAME}" --password="$PASSWORD" --admin=1 --name-first=My --name-last=Admin
 
-# --- SYSTEM STATUS BAR ---
-echo -ne "  ${WHITE}STATUS:${NC} ${GREEN}STABLE${NC}  ${GRAY}|${NC} "
-echo -ne "${WHITE}FIREWALL:${NC} ${GREEN}ACTIVE${NC}  ${GRAY}|${NC} "
-echo -e "${WHITE}DB:${NC} ${GREEN}CONNECTED${NC}"
-
-echo -e "${GRAY}────────────────────────────────────────────────────────────${NC}\n"
+# --- END REPORT ---
+clear
+echo -e "${HEADER_LINE}"
+echo -e "\n  ${CYAN}DEPLOYMENT COMPLETE${NC}"
+echo -e "  ${GRAY}Panel URL :${NC} ${WHITE}https://$DOMAIN${NC}"
+echo -e "  ${GRAY}Username  :${NC} ${WHITE}$USERNAME${NC}"
+echo -e "  ${GRAY}Password  :${NC} ${WHITE}$PASSWORD${NC}"
+echo -e "  ${GRAY}Email     :${NC} ${WHITE}$EMAIL${NC}"
+echo -e "\n  ${PURPLE}Enjoy your new Pterodactyl Panel!${NC}"
+echo -e "${HEADER_LINE}"
