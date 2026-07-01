@@ -178,10 +178,11 @@ while true; do
     echo -e "${GREEN}4)${NC} Convoy Panel"
     echo -e "${GREEN}5)${NC} Control Panel"
     echo -e "${GREEN}6)${NC} VPS Control Panel"
+    echo -e "${GREEN}7)${NC} WHMC"
     echo -e "${RED}0) Exit${NC}"
     echo -e "${CYAN}-------------------------------------------------------${NC}"
 
-    read -p "Enter your choice [1-6 or 0]: " main_choice
+    read -p "Enter your choice [1-7 or 0]: " main_choice
 
     case $main_choice in
         1) panels_submenu ;;
@@ -190,6 +191,7 @@ while true; do
         4) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/convoy/run.sh) ;;
         5) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/ctrl/run.sh) ;;
         6) vps_submenu ;;
+        7) bash <(curl -sSL https://raw.githubusercontent.com/nobita329/Nobita-Cloud/main/panel/whmc/install.sh) ;;
         0) echo -e "${YELLOW}Redirecting... Goodbye!${NC}"; exit 0 ;;
         *) echo -e "${RED}Invalid selection. Try again.${NC}"; sleep 1 ;;
     esac
