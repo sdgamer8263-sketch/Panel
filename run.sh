@@ -82,10 +82,11 @@ panels_submenu() {
         echo -e "${GREEN}8)${NC} Hydra Panel"
         echo -e "${GREEN}9)${NC} Oversee Panel"
         echo -e "${GREEN}10)${NC} Darco Panel"
+        echo -e "${GREEN}11)${NC} Kubek Panel"
         echo -e "${RED}0)${NC} Back to Main Menu"
         echo -e "${CYAN}-------------------------------------------------------${NC}"
         
-        read -p "Select option [1-10 or 0]: " panel_choice
+        read -p "Select option [1-11 or 0]: " panel_choice
         case $panel_choice in
             1) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/pterodactyl/upterodactyl.sh) ;;
             2) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/PufferPanel/PufferPanel.sh) ;;
@@ -97,6 +98,7 @@ panels_submenu() {
             8) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Hydra/run.sh) ;;
             9) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Oversee/run.sh) ;;
             10) bash <(curl -s https://raw.githubusercontent.com/sdgamer8263-sketch/Panel/main/Darco/run.sh) ;;
+            11) curl -fsSL https://raw.githubusercontent.com/Seeroy/kubek-minecraft-dashboard/main/install.sh | bash ;;
             0) return ;;
             *) echo -e "${RED}Invalid option. Please try again.${NC}"; sleep 1 ;;
         esac
@@ -151,15 +153,17 @@ vps_submenu() {
         show_banner
         echo -e "${MAGENTA}               VPS CONTROL PANEL MENU                  ${NC}"
         echo -e "${CYAN}-------------------------------------------------------${NC}"
-        echo -e "${GREEN}1)${NC} HVM"
-        echo -e "${GREEN}2)${NC} New (soon)"
+        echo -e "${GREEN}1)${NC} HVM 9(License Bypass)"
+        echo -e "${GREEN}2)${NC} V PANEL (BY CODING HUB)"
+        echo -e "${GREEN}3)${NC} OMEGA PANEL V3"
         echo -e "${RED}0)${NC} Back to Main Menu"
         echo -e "${CYAN}-------------------------------------------------------${NC}"
         
-        read -p "Select option [1-2 or 0]: " vps_choice
+        read -p "Select option [1-3 or 0]: " vps_choice
         case $vps_choice in
-            1) bash <(curl -sSL https://raw.githubusercontent.com/nobita329/Nobita-Cloud/main/Extras/lvm.sh) ;;
-            2) bash <(curl -sL https://raw.githubusercontent.com/sdgamer8263-sketch/skost/main/run.sh) ;;
+            1) bash <(curl -s https://copyandpaste.at/api/raw?id=WMsmzhWUb9);;
+            2) git clone https://github.com/nobita329/vpanel.git && cd vpanel && sudo bash vpanel.sh ;;
+            3) bash <(curl -s https://raw.githubusercontent.com/nafigamer0/Omega-Panel-V3/refs/heads/main/auto.sh) ;;
             0) return ;;
             *) echo -e "${RED}Invalid option. Please try again.${NC}"; sleep 1 ;;
         esac
